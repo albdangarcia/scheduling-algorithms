@@ -2,32 +2,132 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+::selection {
+  color: #000000;
+  background: #babcff;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+.idle-stripes {
+  background: repeating-linear-gradient(
+    -55deg,
+    #f7f7f7,
+    #f7f7f7 10px,
+    #fff 10px,
+    #fff 20px
+  );
+}
+/* animations */
+@keyframes readyQAnimation {
+  from {
+    width: 0px;
+  }
+  to {
+    width: 40px;
   }
 }
-
+@keyframes hideBarContainer {
+  from {
+    width: 40px;
+  }
+  to {
+    width: 0px;
+  }
+}
+@keyframes fadeIn {
+  0% {
+    display: none;
+    opacity: 0;
+  }
+  1% {
+    display: block;
+    opacity: 0;
+  }
+  100% {
+    display: block;
+    opacity: 1;
+  }
+}
+@keyframes fadeInNumbers {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes width-animation {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+.gradient {
+  &::before {
+    top: 1rem;
+    width: 480px;
+    height: 360px;
+    left: 50%;
+    transform: translateX(-30%);
+    border-radius: 50%;
+    background: conic-gradient(#87ceeb, #6f00ff);
+    filter: blur(2rem);
+    opacity: 0.2;
+  }
+  &::after {
+    top: 4rem;
+    left: 50%;
+    height: 180px;
+    width: 240px;
+    transform: translateX(-130%);
+    background: conic-gradient(#87ceeb, #2b00ff);
+    filter: blur(3rem);
+    opacity: 0.4;
+  }
+}
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  &::before {
+    top: 1rem;
+    width: 480px;
+    height: 360px;
+    left: 50%;
+    transform: translateX(-30%);
+    border-radius: 50%;
+    background: conic-gradient(#87ceeb, #0000ff);
+    filter: blur(2rem);
+    opacity: 0.2;
   }
+  &::after {
+    top: 4rem;
+    left: 50%;
+    height: 180px;
+    width: 240px;
+    transform: translateX(-130%);
+    background: conic-gradient(#87ceeb, #0000ff);
+    filter: blur(3rem);
+    opacity: 0.4;
+  }
+}
+main {
+  &::before {
+    top: 1rem;
+    height: 300px;
+    width: 400px;
+    left: 50%;
+    transform: translateX(-30%);
+    border-radius: 50%;
+    background: conic-gradient(#87ceeb, #ff003c);
+    filter: blur(1rem);
+    opacity: 0.1;
+  }
+}
+main::before,
+main::after,
+body::before,
+body::after,
+.gradient::before,
+.gradient::after {
+  content: "";
+  position: absolute;
+  z-index: -20;
 }

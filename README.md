@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<p align="center">
+  <br/>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="public/favicondark.png">
+    <source media="(prefers-color-scheme: light)" srcset="public/faviconlight.png">
+    <img width=70 alt="Scheduling Algorithms" src="public/faviconlight.png">
+  </picture>
+  <h3 align="center">Scheduling Algorithms</h3>
+  <p align="center">
+    <img src="https://badgen.net/badge/icon/typescript?icon=typescript&label" alt="typecript">
+    <img src="https://badgen.net/badge/icon/docker?icon=docker&label" alt="docker">
+  </p>
+</p>
+<p align="center">This web application is designed to simulate and visualize various CPU scheduling algorithms. Users can input process details and see how different scheduling methods affect the execution of processes. The supported algorithms include: First-Come, First-Served (FCFS), Shortest Job First (SJF), Round Robin (RR), Priority Scheduling.</p>
+<p align="center"><a href="#">Live Demo</a></p>
 
 ## Getting Started
 
-First, run the development server:
+Follow these steps to run this project on your local machine.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+1. **Clone the repository**
+
+   You need to clone the repository to your local machine. You can do this with the following command:
+
+   ```shell
+   git clone https://github.com/yourusername/yourrepository.git
+   ```
+
+2. **Navigate to the project directory**
+
+   Change your current directory to the project's directory with:
+
+   ```shell
+   cd yourrepository
+   ```
+
+3. **Install the dependencies**
+
+   Now, you can install the dependencies required for the project with:
+
+   ```shell
+   npm install
+   ```
+
+4. **Run the application**
+
+   You can now run the application in development mode with:
+
+   ```shell
+   npm run dev
+   ```
+
+   The application should now be running at http://localhost:3000 (or whatever port you have configured).
+
+### Docker Container
+
+To run the application as a Docker container, you need to have Docker installed on your machine. Once Docker is installed, you can use the Docker Compose command:
+
+```shell
+docker compose up
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Future Improvements
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Here are some features I'm planning to add in the future to improve the animation experience:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- **Animation Timeline Control**: We plan to add a slider that will allow users to control the animation timeline. This will provide users with the ability to move forwards and backwards through the animation at their own pace.
 
-## Learn More
+- **Animation Speed Control**: We're also planning to add a feature that will allow users to control the speed of the animation. This will give users the ability to slow down or speed up the animation as needed.
 
-To learn more about Next.js, take a look at the following resources:
+## Contributing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Contributions are welcome! Please submit a pull request or open an issue to discuss your ideas or report bugs.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## License
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This project is licensed under the MIT License.
