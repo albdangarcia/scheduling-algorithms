@@ -1,5 +1,4 @@
 <p align="center">
-  <br/>
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="public/favicondark.png">
     <source media="(prefers-color-scheme: light)" srcset="public/faviconlight.png">
@@ -12,7 +11,7 @@
   </p>
 </p>
 <p align="center">This web application is designed to simulate and visualize various CPU scheduling algorithms. Users can input process details and see how different scheduling methods affect the execution of processes. The supported algorithms include: First-Come, First-Served (FCFS), Shortest Job First (SJF), Round Robin (RR), Priority Scheduling.</p>
-<p align="center"><a href="#">Live Demo</a></p>
+<p align="center"><a href="https://scheduling-algorithms-two.vercel.app/">Live Demo</a></p>
 
 ## Getting Started
 
