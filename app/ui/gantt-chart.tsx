@@ -54,7 +54,7 @@ export default function GanttChartResult({
             >
               <div className="text-ellipsis whitespace-nowrap overflow-hidden"
               >
-                {process.id !== -1 ? `P${process.id}` : "idle"}
+                {process.id !== -1 ? `P${process.id + 1}` : "idle"}
               </div>
             </div>
 

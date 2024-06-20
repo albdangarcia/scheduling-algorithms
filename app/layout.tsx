@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     "Algorithm Visualizer",
     "Algorithm Simulator",
   ],
-  metadataBase: new URL('http://localhost:3000'),
+  metadataBase: new URL('https://scheduling-algorithms-two.vercel.app/'),
 };
 
 export default function RootLayout({
@@ -32,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="overflow-x-hidden">
       <body className={`${inter.className} bg-gray-50 overflow-x-hidden`}>
         {children}
       </body>

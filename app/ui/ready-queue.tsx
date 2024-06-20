@@ -27,7 +27,7 @@ export default function ReadyQueue({
                   animationPlayState: "running, running",
                 }}
               >
-                <div>{`P${process.id}`}</div>
+                <div>{`P${process.id + 1}`}</div>
               </div>
             )
         )}
