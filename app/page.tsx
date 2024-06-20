@@ -61,6 +61,9 @@ export default function Page() {
       {/* github icon */}
       <GitHubIcon />
 
+      {/* gradient */}
+      <div id="small-gradient" />
+      
       <main className="max-w-[48rem] w-full">
         {/* form inputs */}
         <Form generate={generate} setResults={setResults} />
