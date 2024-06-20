@@ -46,7 +46,7 @@ export default function RadioOptions({
               value={option}
               disabled={isDisabled(option.id)}
               className={clsx(
-                "group bg-white/20 relative flex cursor-pointer rounded-lg py-4 px-5 shadow-md transition focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[checked]:bg-white border border-transparent data-[checked]:border-indigo-400/95",
+                "group bg-white/20 relative flex cursor-pointer rounded-lg py-4 px-5 shadow-md focus:outline-none data-[focus]:outline-1 data-[focus]:outline-white data-[checked]:bg-white border border-transparent data-[checked]:border-indigo-400/95",
                 isDisabled(option.id) && "blur-[3px]"
               )}
             >
