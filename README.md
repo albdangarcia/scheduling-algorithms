@@ -22,7 +22,7 @@ Follow these steps to run this project on your local machine.
    You need to clone the repository to your local machine. You can do this with the following command:
 
    ```shell
-   git clone https://github.com/yourusername/yourrepository.git
+   git clone https://github.com/albdangarcia/scheduling-algorithms.git
    ```
 
 2. **Navigate to the project directory**
@@ -30,7 +30,7 @@ Follow these steps to run this project on your local machine.
    Change your current directory to the project's directory with:
 
    ```shell
-   cd yourrepository
+   cd scheduling-algorithms
    ```
 
 3. **Install the dependencies**

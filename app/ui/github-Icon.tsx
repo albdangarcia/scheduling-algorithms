@@ -1,7 +1,7 @@
 export default function GitHubIcon() {
   return (
     <div className="absolute top-1 right-1 w-7 h-7 text-gray-310 fill-gray-800">
-      <a href="https://github.com/albdangarcia" aria-label="Link to GitHub profile">
+      <a href="https://github.com/albdangarcia/scheduling-algorithms" aria-label="Link to GitHub profile">
         <svg
           width="100%"
           height="100%"
