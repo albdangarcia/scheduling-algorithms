@@ -55,9 +55,14 @@ Follow these steps to run this project on your local machine.
 
 To run the application as a Docker container, you need to have Docker installed on your machine. Once Docker is installed, you can use the Docker Compose command:
 
-```shell
-docker compose up
-```
+1. Build the Docker image:
+    ```sh
+    docker compose build
+    ```
+1. Run the Docker container:
+    ```sh 
+    docker compose up
+    ```
 
 ## Future Improvements
 
