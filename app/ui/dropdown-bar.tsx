@@ -28,6 +28,7 @@ export default function DropDownBar({
     <div className="gradient pt-10 w-full max-w-[33rem] mx-auto">
       <Listbox
         value={optionSelected}
+        as="div"
         onChange={(value) => onDropOptionChange(value)}
       >
         {({ open }) => (
