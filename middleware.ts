@@ -1,15 +1,9 @@
-// import NextAuth from 'next-auth';
-// import { NextRequest } from 'next/server';
-// import { authProviderConfigList } from './auth.config';
+import NextAuth from "next-auth"
+import authConfig from "./auth.config"
+ 
+export const { auth: middleware } = NextAuth(authConfig)
 
-// const { auth } = NextAuth(authProviderConfigList)
-// export default auth(async function middleware(req: NextRequest) {
-//   // custom middleware logic goes here
-// })
-
-// // Filter Middleware to avoid API routes and static assets
-// export const config = {
-//   matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
-// };
-
-export { auth as middleware } from "@/auth"
+// Filter Middleware to avoid API routes and static assets
+export const config = {
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+};
