@@ -1,5 +1,9 @@
 import { calculateTotalAverages, sortByProperty } from "./helperfunctions";
-import { GanttProcess, Process } from "./definitions";
+import {
+  GanttProcess,
+  Process,
+  TotalAveragesRecordNamesTypes,
+} from "./definitions";
 
 // Sort the ready queue by the algorithm
 function sortByAlgorithm(readyQueue: Process[], algoName?: string): void {
@@ -41,22 +45,28 @@ function processHasArrived(
   }
 }
 
+interface PerformAlgorithmProps {
+  processArray: Process[];
+  processTable: Process[];
+  algoName?: string;
+  curTimeSlice?: number;
+  isPreemptive?: boolean;
+}
+interface PerformAlgorithmReturn {
+  gantt: GanttProcess[];
+  totalAverages: Record<TotalAveragesRecordNamesTypes, number>;
+}
+
 // Perform the algorithm
 // processArray: array of processes to be scheduled
 // processTable: dictionary of processes
-export const performAlgorithm = (
-  processArray: Process[],
-  // processTable: { [key: number]: Process },
-  processTable: Process[],
-  algoName?: string,
-  curTimeSlice?: number,
-  preemptive?: boolean
-): {
-  gantt: GanttProcess[];
-  totalAverages: {
-    [key: string]: number;
-  };
-} => {
+export const performAlgorithm = ({
+  processArray,
+  processTable,
+  algoName,
+  curTimeSlice,
+  isPreemptive,
+}: PerformAlgorithmProps): PerformAlgorithmReturn => {
   // sort the processes by arrival time
   sortByProperty(processArray, "arrivalTime");
 
@@ -82,7 +92,7 @@ export const performAlgorithm = (
 
     // check if the last process from the gantt chart still has burst time left
     // if there is still burst time left then add the process back to the ready queue
-    if (preemptive) {
+    if (isPreemptive) {
       if (gantt.length > 0 && gantt[gantt.length - 1].burstTime > 0) {
         const lastGanttProcess: Process = gantt[gantt.length - 1];
         readyQueue.push({
@@ -108,7 +118,7 @@ export const performAlgorithm = (
 
       // sjf preemptive
       while (
-        preemptive &&
+        isPreemptive &&
         algoName === "sjf" &&
         curQueueProcess.burstTime > 0
       ) {
@@ -129,7 +139,7 @@ export const performAlgorithm = (
 
       // priority preemptive
       while (
-        preemptive &&
+        isPreemptive &&
         algoName === "priority" &&
         curQueueProcess.burstTime > 0
       ) {
@@ -152,10 +162,7 @@ export const performAlgorithm = (
 
       // round robin preemtive
       // while the process has burst time left and the temp time is less than the time slice
-      while (
-        algoName === "rr" &&
-        curQueueProcess.burstTime > 0
-      ) {
+      while (algoName === "rr" && curQueueProcess.burstTime > 0) {
         tempSlice += 1;
         curQueueProcess.burstTime -= 1;
         currentTime += 1;
@@ -166,7 +173,7 @@ export const performAlgorithm = (
 
       // all non-preemptive
       // while the process has burst time left
-      while (!preemptive && curQueueProcess.burstTime > 0) {
+      while (!isPreemptive && curQueueProcess.burstTime > 0) {
         curQueueProcess.burstTime -= 1;
         currentTime += 1;
       }
@@ -203,10 +210,8 @@ export const performAlgorithm = (
 
       // if the process is finished then calculate the totals
       if (processToAddToGantt.burstTime === 0) {
-        
         // Pointer to the process in the processTable
-        const curProcessAtTable: Process =
-          processTable[processToAddToGantt.id];
+        const curProcessAtTable: Process = processTable[processToAddToGantt.id];
 
         // completion time for the process
         curProcessAtTable.completionTime = processToAddToGantt.endTime;
@@ -217,8 +222,7 @@ export const performAlgorithm = (
 
         // waiting time (waitingTime = turnAroundTime - burstTime)
         curProcessAtTable.waitingTime =
-          curProcessAtTable.turnAroundTime -
-          curProcessAtTable.burstTime;
+          curProcessAtTable.turnAroundTime - curProcessAtTable.burstTime;
 
         // add the totals
         totalCompletionTime += curProcessAtTable.completionTime;

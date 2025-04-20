@@ -1,109 +1,144 @@
 import { Field, Input, Label } from "@headlessui/react";
 import clsx from "clsx";
-import { RadioOptionType, ScheduleInputTypes, ScheduleType } from "../lib/definitions";
-import { convertTimeSliceToNum, convertToNumArray } from "../lib/helperfunctions";
+import { z } from "zod";
+import {
+  GenerateFunction,
+  PreemptiveOptionsTypes,
+  PropsScheduleInputTypes,
+  ScheduleKeysTypes,
+} from "../lib/definitions";
+import {
+  convertTimeSliceToNum,
+  convertToNumArray,
+} from "../lib/helperfunctions";
+import {
+  CreateFormSchema,
+  InputFormError,
+  ScheduleInputTypes,
+  scheduleInputSchema,
+} from "../lib/zodSchema/zod-schema";
+import { useActionState } from "react";
+import { createFormInput } from "../lib/actions/calculation";
 
-export default function FormInputs({
+interface Props {
+  inputValues: PropsScheduleInputTypes;
+  setInputValues: React.Dispatch<React.SetStateAction<PropsScheduleInputTypes>>;
+  errorMessage: string;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
+  algorithmSelected: ScheduleKeysTypes;
+  radioSelected: PreemptiveOptionsTypes;
+  generate: GenerateFunction;
+}
+
+const FormInputs = ({
   inputValues,
   setInputValues,
   errorMessage,
   setErrorMessage,
-  optionSelected,
+  algorithmSelected,
   radioSelected,
   generate,
-}: {
-  inputValues: ScheduleInputTypes;
-  setInputValues: React.Dispatch<React.SetStateAction<ScheduleInputTypes>>;
-  errorMessage: string;
-  setErrorMessage: React.Dispatch<React.SetStateAction<string>>;
-  optionSelected: ScheduleType;
-  radioSelected: RadioOptionType
-  generate: (
-    arrivalValues: number[],
-    burstValues: number[],
-    priorityValues: number[] | undefined,
-    timeSlice: number | undefined,
-    algoName: string,
-    preemptive: boolean
-  ) => void;
-}) {
+}: Props) => {
+
   // handle input change
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    inputKey: keyof ScheduleInputTypes
+    inputKey: keyof PropsScheduleInputTypes
   ) => {
-    // Remove letters and multiple spaces
-    let lettersRegexp: RegExp = /[^\d\s]/g;
-    const cleanedValue = e.target.value.replace(lettersRegexp, "");
+    const valueToValidate = e.target.value;
 
-    // Set the input values
-    setInputValues({
-      ...inputValues,
-      [inputKey]: cleanedValue,
-    });
+    try {
+      // Create a temporary object with only the field being changed
+      const validationResult = scheduleInputSchema
+        .partial()
+        .safeParse({ [inputKey]: valueToValidate });
+
+      if (validationResult.success) {
+        // If valid, update the state, clear the general error message
+        setInputValues({
+          ...inputValues,
+          [inputKey]: valueToValidate.replace(/[^\d\s]/g, ""), // Still clean unwanted characters
+        });
+        setErrorMessage(""); // Clear the error message here
+        // Optionally clear specific error messages if you implement them per field
+      } else {
+        // If invalid, set a specific error message
+        console.log(
+          "Validation Error for",
+          inputKey,
+          validationResult.error.issues
+        );
+        setErrorMessage(`Invalid input for ${inputKey}`); // Or a more specific message
+      }
+    } catch (error) {
+      console.error("Error during validation:", error);
+      setErrorMessage("An unexpected error occurred during validation.");
+    }
   };
 
-  // function handleSubmit(prevState: CreateFormState, formData: FormData) {
   function handleSubmit() {
-    let arrivalValues: number[] = [];
-    let burstValues: number[] = [];
-    let priorityValues: number[] | undefined;
-    let timeSlice: number | undefined;
+    setErrorMessage(""); // Clear previous errors on submit
 
-    // Convert the input values to number arrays
     try {
-      arrivalValues = convertToNumArray(inputValues.arrivalTimeValues, true);
-      burstValues = convertToNumArray(inputValues.burstTimeValues, false);
-      priorityValues = inputValues.priorityValues
-        ? convertToNumArray(inputValues.priorityValues, true)
+      const parsedData = CreateFormSchema.parse(inputValues);
+
+      let arrivalValues: number[] = convertToNumArray(
+        parsedData.arrivalTimeValues,
+        true
+      );
+      let burstValues: number[] = convertToNumArray(
+        parsedData.burstTimeValues,
+        false
+      );
+      let priorityValues: number[] | undefined = parsedData.priorityValues
+        ? convertToNumArray(parsedData.priorityValues, true)
         : undefined;
-      timeSlice = inputValues.timeSlice
-        ? convertTimeSliceToNum(inputValues.timeSlice)
+      let timeSlice: number | undefined = parsedData.timeSlice
+        ? convertTimeSliceToNum(parsedData.timeSlice)
         : undefined;
-    } catch (error) {
-      if (error instanceof Error) {
-        setErrorMessage(error.message);
+
+      // Check if the arrays have the same length
+      if (
+        arrivalValues.length !== burstValues.length ||
+        (priorityValues && priorityValues.length !== arrivalValues.length)
+      ) {
+        setErrorMessage(
+          "All input arrays except for Time Slice must have the same length"
+        );
         return;
       }
-    }
 
-    // Check if priority values and time slice are required
-    if (
-      (inputValues.priorityValues !== undefined &&
-        priorityValues === undefined) ||
-      (inputValues.timeSlice !== undefined && timeSlice === undefined)
-    ) {
-      setErrorMessage("Input values are required");
+      // limit the input values to 20
+      if (arrivalValues.length > 20) {
+        setErrorMessage("Only 20 values are allowed");
+        return;
+      }
+
+      // Generate the results
+      generate({
+        arrivalValues,
+        burstValues,
+        priorityValues,
+        timeSlice,
+        algorithm: algorithmSelected,
+        isPreemptive: radioSelected === "preemptive",
+      });
+    } catch (error: any) {
+      if (error instanceof z.ZodError) {
+        // Format Zod errors into a user-friendly message
+        const formattedErrors = error.issues
+          .map((issue) => issue.message)
+          .join(", ");
+        setErrorMessage(`Validation Error: ${formattedErrors}`);
+      } else if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("An unexpected error occurred.");
+      }
       return;
     }
-
-    // Check if the arrays have the same length
-    if (
-      arrivalValues.length !== burstValues.length ||
-      (priorityValues && priorityValues.length !== arrivalValues.length)
-    ) {
-      setErrorMessage(
-        "All input arrays except for Time Slice must have the same length"
-      );
-      return;
-    }
-
-    // limit the input values to 20
-    if (arrivalValues.length > 20) {
-      setErrorMessage("Only 20 values are allowed");
-      return;
-    }
-
-    // Generate the results
-    generate(
-      arrivalValues,
-      burstValues,
-      priorityValues,
-      timeSlice,
-      optionSelected.abbr,
-      radioSelected.id === 2 ? true : false // id 1: non-preemtive, id 2: preemtive
-    );
   }
+
   return (
     <div>
       <div
@@ -113,7 +148,10 @@ export default function FormInputs({
       >
         {/* arrival input values */}
         <Field className="w-full min-w-36 max-w-64 justify-self-end focus-within:ring-indigo-500 shadow-sm ring-indigo-200 ring-1 ring-inset pt-2.5 pb-1.5 px-3 rounded-md bg-white">
-          <Label htmlFor="arrivalValues"  className="text-sm font-medium text-gray-800 block">
+          <Label
+            htmlFor="arrivalValues"
+            className="text-sm font-medium text-gray-800 block"
+          >
             Arrival Times
           </Label>
           <Input
@@ -127,7 +165,10 @@ export default function FormInputs({
 
         {/* burst input values */}
         <Field className="w-full min-w-36 max-w-64 justify-self-start focus-within:ring-indigo-500 shadow-sm ring-indigo-200 ring-1 ring-inset pt-2.5 pb-1.5 px-3 rounded-md bg-white">
-          <Label htmlFor="burstValues" className="text-sm font-medium text-gray-800 block">
+          <Label
+            htmlFor="burstValues"
+            className="text-sm font-medium text-gray-800 block"
+          >
             Burst Times
           </Label>
           <Input
@@ -142,7 +183,10 @@ export default function FormInputs({
         {/* priority input values */}
         {inputValues.priorityValues != undefined && (
           <Field className="w-full min-w-36 max-w-64 justify-self-end focus-within:ring-indigo-500 shadow-sm ring-indigo-200 ring-1 ring-inset pt-2.5 pb-1.5 px-3 rounded-md bg-white">
-            <Label htmlFor="priorityValues" className="text-sm font-medium text-gray-800 block">
+            <Label
+              htmlFor="priorityValues"
+              className="text-sm font-medium text-gray-800 block"
+            >
               Priority Times
             </Label>
             <Input
@@ -158,7 +202,10 @@ export default function FormInputs({
         {/* time slice input value */}
         {inputValues.timeSlice != undefined && (
           <Field className="col-span-2 justify-self-center text-center w-24 focus-within:ring-indigo-500 shadow-sm ring-indigo-200 ring-1 ring-inset pt-2.5 pb-1.5 px-3 rounded-md bg-white">
-            <Label htmlFor="timeSliceValue" className="text-sm font-medium text-gray-800 block">
+            <Label
+              htmlFor="timeSliceValue"
+              className="text-sm font-medium text-gray-800 block"
+            >
               Time Slice
             </Label>
             <Input
@@ -183,8 +230,14 @@ export default function FormInputs({
         </button>
 
         {/* error message */}
-        {errorMessage && <div className="leading-8 text-red-700 text-sm px-2 mt-1 bg-red-100/70 rounded border-red-200/50 border">{errorMessage}</div>}
+        {errorMessage && (
+          <div className="leading-8 text-red-700 text-sm font-medium px-2 mt-1 bg-red-100/70 rounded border-red-200/50 border">
+            {errorMessage}
+          </div>
+        )}
       </div>
     </div>
   );
-}
+};
+
+export default FormInputs;

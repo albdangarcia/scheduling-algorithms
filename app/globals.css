@@ -89,7 +89,7 @@
       width: 280px;
     }
   }
-  @media (min-width: theme('screens.sm')) {
+  @media (min-width: theme("screens.sm")) {
     &::before {
       width: 480px;
     }
@@ -112,7 +112,7 @@ main {
       width: 280px;
     }
   }
-  @media (min-width: theme('screens.sm')) {
+  @media (min-width: theme("screens.sm")) {
     &::before {
       width: 480px;
     }
@@ -147,7 +147,7 @@ main {
       width: 280px;
     }
   }
-  @media (min-width: theme('screens.sm')) {
+  @media (min-width: theme("screens.sm")) {
     &::before {
       width: 480px;
     }
@@ -162,4 +162,97 @@ main::after,
   content: "";
   position: absolute;
   z-index: -20;
+}
+
+.data-container {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid #eee;
+  padding: 4px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.data-item {
+  flex: 2 1 0;
+  overflow: hidden; /* clip content within the item's bounds */
+  white-space: nowrap;
+  padding: 0 6px;
+  border-right: 1px solid #eee;
+  display: flex;
+  align-items: baseline;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.data-item:last-child {
+  border-right: none;
+}
+
+.data-item-slice {
+  flex-grow: 1;
+}
+
+.data-item .label {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  margin-right: 4px;
+  flex-shrink: 0;
+}
+
+.data-item .number-wrapper {
+  overflow: hidden; /* clips the animated span */
+  flex-grow: 1;
+  vertical-align: baseline;
+  min-width: 10px;
+}
+
+.data-item .number-content {
+  display: inline-block;
+  white-space: nowrap;
+  will-change: transform;
+  cursor: default;
+  /* Default translation */
+  --marquee-translate-x: 0px;
+}
+
+/* --- Marquee Animation --- */
+@keyframes marquee {
+  /* Start at the initial position */
+  0% {
+    transform: translateX(0%);
+  }
+  /* Add a pause at the beginning */
+  2% {
+    transform: translateX(0%);
+  }
+  /* Move to the calculated end position */
+  80% {
+    /* Use the CSS variable set by JavaScript */
+    transform: translateX(var(--marquee-translate-x));
+  }
+  /* Pause at the end before looping */
+  100% {
+    transform: translateX(var(--marquee-translate-x));
+  }
+}
+
+/* --- Conditional Hover & Animation --- */
+
+/* Apply hover background ONLY to the specific item being hovered IF it has the overflow class */
+.data-item.is-item-overflowing:hover {
+  background-color: #f0f0f0;
+}
+
+/* Apply animation ONLY to the number-content inside a hovered data-item IF that data-item has the overflow class */
+.data-item.is-item-overflowing:hover .number-content {
+  /* The animation always runs on hover IF the item overflows */
+  /* It will only *move* if --marquee-translate-x is non-zero */
+  animation: marquee 8s linear infinite;
+  animation-delay: 0.5s;
+}
+
+/* Ensure no animation runs if the item is NOT overflowing, even on hover */
+.data-item:not(.is-item-overflowing) .number-content {
+  animation: none; /* remove animation */
 }

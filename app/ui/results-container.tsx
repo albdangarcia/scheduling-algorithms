@@ -1,5 +1,8 @@
 import clsx from "clsx";
-import { ResultsSectionTypes } from "../lib/definitions";
+import {
+  ResultsSectionTypes,
+  TotalAveragesRecordNames,
+} from "../lib/definitions";
 import ReadyQueue from "./ready-queue";
 import GanttChartResult from "./gantt-chart";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
@@ -13,13 +16,12 @@ const tableHeaders = [
   { name: "Waiting Time", abbr: "WT" },
 ];
 
-export default function ResultsContainer({
-  results,
-  animationKey,
-}: {
+interface Props {
   results: ResultsSectionTypes;
   animationKey: number;
-}) {
+}
+
+const ResultsContainer = ({ results, animationKey }: Props) => {
   return (
     <div className="mt-5">
       <h1 className="text-xl text-gray-800 p-2">Animation</h1>
@@ -34,9 +36,7 @@ export default function ResultsContainer({
       {/* table wrapper */}
       <div className="mt-16 bg-white border border-indigo-200 rounded-md shadow-sm pb-4 text-center pt-1">
         {/* table headers */}
-        <div
-          className="text-gray-400 grid-cols-[50px_1fr_1fr_1fr_1fr_1fr] grid gap-4 px-4 py-4 rounded-t-md antialiased"
-        >
+        <div className="text-gray-400 grid-cols-[50px_1fr_1fr_1fr_1fr_1fr] grid gap-4 px-4 py-4 rounded-t-md antialiased">
           {tableHeaders.map((header, i) => (
             <div
               key={header.name}
@@ -82,11 +82,17 @@ export default function ResultsContainer({
             </div>
 
             {/* process information */}
-            {Object.keys(results.totalAverages).map((key) => (
-              <div key={key} className="bg-gray-100/45 rounded-sm">
-                {results.totalAverages[key]}
-              </div>
-            ))}
+            {TotalAveragesRecordNames.map((id) => {
+              const option = results.totalAverages[id];
+              return (
+                <div
+                  key={id}
+                  className="bg-gray-100/45 rounded-sm text-gray-900 font-medium"
+                >
+                  {option}
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -99,4 +105,6 @@ export default function ResultsContainer({
       </div>
     </div>
   );
-}
+};
+
+export default ResultsContainer;

@@ -1,4 +1,4 @@
-import { Process } from "./definitions";
+import { Process, TotalAveragesRecord } from "./definitions";
 
 // Returns a random hex color
 export const getColor = () => {
@@ -43,7 +43,6 @@ export const roundToTwoDecimals = (num: number) => {
   return Number(Math.round(Number(num + "e+2")) + "e-2");
 };
 
-
 // convert the string arrays to number arrays
 export const getProcessesAndTable = (
   arrivalValues: number[],
@@ -65,7 +64,7 @@ export const getProcessesAndTable = (
     }
     processArray.push(process);
     // push a copy of the process object to processTableResults
-    processTableResults.push({...process});
+    processTableResults.push({ ...process });
   }
   return { processArray, processTableResults };
 };
@@ -109,7 +108,10 @@ export const calculateTotalAverages = (
   totalTurnAroundTime: number,
   totalWaitingTime: number,
   numberOfProcesses: number
-): { [key: string]: number } => {
+): TotalAveragesRecord => {
+  if (numberOfProcesses <= 0) {
+    throw new Error("Number of processes must be greater than 0");
+  }
   return {
     completionTimeAverage: roundToTwoDecimals(
       totalCompletionTime / numberOfProcesses
