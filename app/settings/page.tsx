@@ -45,7 +45,7 @@ const UserSettings = async () => {
           <div className="size-12 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center" />
         )}
 
-        <div className="flex-grow min-w-0">
+        <div className="grow min-w-0">
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 truncate">
             {name ?? "User"}
           </h2>

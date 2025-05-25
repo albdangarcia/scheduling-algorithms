@@ -23,7 +23,7 @@ const getFieldClasses = (hasError: boolean | undefined): string => clsx(
         "focus-within:ring-red-500 dark:focus-within:ring-red-500"
       ]
     : [ // --- NON-ERROR STATE ---
-        // Unfocused "double ring" (1px inner light + 1px outer dark = 2px total visual width)
+        // Unfocused "double ring-3" (1px inner light + 1px outer dark = 2px total visual width)
         "ring-1 ring-inset", // Base ring: 1px, inset.
         "ring-white dark:ring-gray-800", // inner ring color
         "ring-offset-1", // outer ring via offset: 1px.
@@ -93,7 +93,7 @@ const FormField = ({
           aria-describedby={`${id}-error`}
           className={clsx(
             "bg-transparent input-style block w-full border-none p-0 text-base",
-            "text-gray-900 dark:text-gray-400 focus:dark:text-gray-300 placeholder:text-sm focus:outline-none focus:ring-0",
+            "text-gray-900 dark:text-gray-400 dark:focus:text-gray-300 placeholder:text-sm focus:outline-hidden focus:ring-0",
             inputClassName // Apply any specific input classes (e.g., text-center)
           )}
         />

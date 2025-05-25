@@ -29,7 +29,7 @@ const RecentInputsList = ({
   let currentRefIndex = 0;
 
   return (
-    <div className="overflow-y-auto flex-grow max-h-[calc(100vh-100px)]">
+    <div className="overflow-y-auto grow max-h-[calc(100vh-100px)]">
       {sidebarListError && (
         <div className="p-3 my-2 text-center text-sm text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400 rounded-md mx-2">
           <p>{sidebarListError}</p>
@@ -75,7 +75,7 @@ const RecentInputsList = ({
           <button
             onClick={handleLoadMoreInputs}
             disabled={isAppending}
-            className="px-4 py-2 dark:text-gray-400 dark:hover:text-gray-300 font-semibold rounded disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+            className="px-4 py-2 dark:text-gray-400 dark:hover:text-gray-300 font-semibold rounded-sm disabled:opacity-50 disabled:cursor-not-allowed text-sm"
           >
             {isAppending ? (
               "Loading..."

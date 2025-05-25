@@ -14,7 +14,7 @@ const ReadyQueue = ({ ganttChartData }: Props) => {
         Ready Queue Visualization
       </h3>
       {/* Container for the process items in the ready queue */}
-      <div className="bg-gray-100 dark:bg-gray-800/50 min-w-[57px] flex px-[5px] py-[2px] rounded-sm">
+      <div className="bg-gray-100 dark:bg-gray-800/50 min-w-[57px] flex px-[5px] py-[2px] rounded-xs">
         {ganttChartData.map(
           (
             process,
@@ -24,7 +24,7 @@ const ReadyQueue = ({ ganttChartData }: Props) => {
               <div
                 className={clsx(
                   "process-bar-animation flex justify-center items-center text-sm text-gray-800 font-medium",
-                  "overflow-hidden w-[43px] h-[29px] mr-[1px] rounded-sm shadow-[0_2px_3px_#bababa5c] dark:shadow-none"
+                  "overflow-hidden w-[43px] h-[29px] mr-px rounded-xs shadow-[0_2px_3px_#bababa5c] dark:shadow-none"
                 )}
                 key={`${process.id}-${i}`}
                 style={{

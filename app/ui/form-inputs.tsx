@@ -126,7 +126,7 @@ const FormInputs = ({
           type="submit"
           disabled={isPending}
           className={clsx(
-            "text-white text-sm px-4 py-2 mt-3 rounded-md shadow-md bg-indigo-600 hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600",
+            "text-white text-sm px-4 py-2 mt-3 rounded-md shadow-md bg-indigo-600 hover:bg-indigo-700 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600",
             isPending && "opacity-50 cursor-not-allowed"
           )}
         >

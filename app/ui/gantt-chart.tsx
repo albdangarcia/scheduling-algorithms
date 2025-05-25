@@ -131,7 +131,7 @@ const GanttChartResult = ({ ganttChartData }: GanttChartResultProps) => {
   const referenceWidth = clientReferenceWidth > 0 ? clientReferenceWidth : 800; // Ensure referenceWidth is positive
 
   // --- Logic to determine flex behavior and container width ---
-  let useFlexGrowForBarsFinal: boolean; // Flag to determine if bars should use flex-grow
+  let useFlexGrowForBarsFinal: boolean; // Flag to determine if bars should use grow
   let innerFlexContainerWidthStyleFinal: string; // CSS width style for the inner container
   let displayScrollMessageFinal: boolean; // Flag to show/hide the horizontal scroll message
 
@@ -139,7 +139,7 @@ const GanttChartResult = ({ ganttChartData }: GanttChartResultProps) => {
   const estimatedWidthForOriginalFlexDecision =
     sumOfIdealBarWidthsAndMargins + ORIGINAL_LOGIC_MINIMAL_PADDING_PX;
 
-  // Determine if the original layout logic would have used flex-grow
+  // Determine if the original layout logic would have used grow
   const originalLogicWouldFlex =
     numBars > 0 && estimatedWidthForOriginalFlexDecision <= referenceWidth;
 
@@ -148,7 +148,7 @@ const GanttChartResult = ({ ganttChartData }: GanttChartResultProps) => {
     const actualFlexSpaceInNewDesign =
       referenceWidth - 2 * CHART_CONTAINER_HORIZONTAL_PADDING_PX;
     if (sumOfMinBarWidthsAndMargins <= actualFlexSpaceInNewDesign) {
-      // If minimum widths fit, use flex-grow and set container width to 100%
+      // If minimum widths fit, use grow and set container width to 100%
       useFlexGrowForBarsFinal = true;
       innerFlexContainerWidthStyleFinal = "100%";
       displayScrollMessageFinal = false; // No scroll message needed
@@ -179,10 +179,10 @@ const GanttChartResult = ({ ganttChartData }: GanttChartResultProps) => {
   return (
     <div className="gantt-chart-container mb-[55px]">
       {/* Container for horizontal scrolling */}
-      <div className="w-full overflow-x-auto overflow-y-hidden flex-shrink-0">
+      <div className="w-full overflow-x-auto overflow-y-hidden shrink-0">
         {/* Inner container for the process bars, styled dynamically */}
         <div
-          className="flex pt-[5px] pb-8 rounded-sm relative"
+          className="flex pt-[5px] pb-8 rounded-xs relative"
           style={{
             paddingLeft: `${CHART_CONTAINER_HORIZONTAL_PADDING_PX}px`,
             paddingRight: `${CHART_CONTAINER_HORIZONTAL_PADDING_PX}px`,
@@ -205,10 +205,10 @@ const GanttChartResult = ({ ganttChartData }: GanttChartResultProps) => {
               processSegmentStyle.flexGrow =
                 process.animationDuration > 0 ? process.animationDuration : 0.1; // Grow based on duration, with a minimum if duration is 0
               processSegmentStyle.flexShrink = 1; // Allow shrinking
-              processSegmentStyle.flexBasis = "0px"; // Start from 0 basis for flex-grow
+              processSegmentStyle.flexBasis = "0px"; // Start from 0 basis for grow
               processSegmentStyle.minWidth = `${MIN_PROCESS_BAR_WIDTH_PX}px`; // Ensure minimum width
 
-              // Special handling for idle processes when using flex-grow
+              // Special handling for idle processes when using grow
               if (process.id === IDLE_PROCESS_ID) {
                 const idleNaturalWidth =
                   process.animationDuration * PIXELS_PER_TIME_UNIT;
@@ -258,7 +258,7 @@ const GanttChartResult = ({ ganttChartData }: GanttChartResultProps) => {
                     "text-sm font-medium flex items-center justify-center rounded-[3px] h-full shadow-[0_2px_3px_#bababa5c] dark:shadow-none overflow-hidden w-full",
                     // Conditional classes for idle processes (striped background)
                     process.id === IDLE_PROCESS_ID
-                      ? "bg-[repeating-linear-gradient(-55deg,_#f7f7f7,_#f7f7f7_10px,_#FFF_10px,_#FFF_20px)] tracking-wider text-gray-700 dark:bg-[repeating-linear-gradient(-55deg,_#18202f,_#18202f_10px,_#1c2638_10px,_#1c2638_20px)] dark:text-gray-400"
+                      ? "bg-[repeating-linear-gradient(-55deg,#f7f7f7,#f7f7f7_10px,#FFF_10px,#FFF_20px)] tracking-wider text-gray-700 dark:bg-[repeating-linear-gradient(-55deg,#18202f,#18202f_10px,#1c2638_10px,#1c2638_20px)] dark:text-gray-400"
                       : "text-gray-800" // Default text color for non-idle processes
                   )}
                   style={{

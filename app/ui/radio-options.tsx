@@ -71,7 +71,7 @@ const RadioOptions = ({
                 disabled={optionIsDisabled}
                 className={clsx(
                   "group relative flex flex-1 rounded-lg px-5 py-4 shadow-md",
-                  "focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500",
+                  "focus:outline-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500",
                   isChecked
                     ? "bg-white dark:bg-gray-900/80 ring-2 ring-indigo-500 dark:ring-indigo-500 transition-shadow"
                     : "bg-white/20 dark:bg-white/5 ring-1 ring-white/10 dark:ring-white/10 hover:bg-white/40 dark:hover:bg-gray-500/20",
@@ -81,7 +81,7 @@ const RadioOptions = ({
                 )}
               >
                 <div className="flex w-full items-start justify-between">
-                  <div className="flex-grow">
+                  <div className="grow">
                     <p
                       className={clsx(
                         "font-semibold text-sm/6",

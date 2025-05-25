@@ -77,7 +77,7 @@ const SavedInputListItem = ({
 }: SavedInputListItemProps) => {
   return (
     <li key={input.id}>
-      <div className="block w-full p-0 text-left rounded">
+      <div className="block w-full p-0 text-left rounded-sm">
         {/* Header section: Algorithm name, preemption type, and Apply button */}
         <div className="text-xs grid grid-cols-2 mb-1 text-gray-950 font-semibold">
           <div className="dark:text-gray-400 text-gray-700 truncate pr-1">
@@ -92,9 +92,9 @@ const SavedInputListItem = ({
             onClick={() => onApplyInput(input)}
             aria-label="apply inputs"
             className={clsx(
-              "ml-3 bg-gray-200 dark:bg-gray-900 w-11 rounded-sm justify-self-end",
+              "ml-3 bg-gray-200 dark:bg-gray-900 w-11 rounded-xs justify-self-end",
               "hover:bg-gray-300 text-gray-700",
-              "hover:dark:bg-gray-700 dark:text-gray-500 hover:dark:text-gray-400"
+              "dark:hover:bg-gray-700 dark:text-gray-500 dark:hover:text-gray-400"
             )}
           >
             apply
@@ -107,7 +107,7 @@ const SavedInputListItem = ({
             "flex flex-wrap w-full text-gray-900 dark:text-gray-300",
             "gap-x-2 gap-y-1",
             "p-2 text-sm leading-5",
-            "border border-gray-200 dark:border-gray-700 rounded"
+            "border border-gray-200 dark:border-gray-700 rounded-sm"
           )}
         >
           {/* Arrival Time */}

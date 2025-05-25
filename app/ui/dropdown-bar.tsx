@@ -90,7 +90,7 @@ const DropDownBar = ({ onDropDownOptionChange, algorithmSelected }: Props) => {
   const disclosureButtonRef = useRef<HTMLButtonElement | null>(null); // Ref for the DisclosureButton
 
   return (
-    <div className="pt-[1rem] w-full max-w-[33rem] mx-auto">
+    <div className="pt-6 w-full max-w-132 mx-auto">
       <div>
         <Field>
           <Label
@@ -125,7 +125,7 @@ const DropDownBar = ({ onDropDownOptionChange, algorithmSelected }: Props) => {
                   <ListboxButton
                     className={clsx(
                       "relative block w-full rounded-md bg-gray-100 dark:bg-gray-700 py-2 px-3 text-left text-sm/6",
-                      "focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-indigo-500 dark:data-[focus]:outline-indigo-600",
+                      "focus:outline-hidden data-focus:outline-2 data-focus:-outline-offset-2 data-focus:outline-indigo-500 dark:data-focus:outline-indigo-600",
                       "text-gray-800 dark:text-gray-200 dark:hover:bg-gray-700/70"
                     )}
                     onClick={() => {
@@ -147,8 +147,8 @@ const DropDownBar = ({ onDropDownOptionChange, algorithmSelected }: Props) => {
                 <ListboxOptions
                   anchor="bottom"
                   transition
-                  className="w-[calc(var(--button-width)+1rem)] mt-1 rounded-b-xl bg-white dark:bg-gray-800 p-1 shadow-lg [--anchor-gap:var(--spacing-1)] focus:outline-none
-                           origin-top transition duration-100 ease-out data-[closed]:scale-95 data-[closed]:opacity-0
+                  className="w-[calc(var(--button-width)+1rem)] mt-1 rounded-b-xl bg-white dark:bg-gray-800 p-1 shadow-lg [--anchor-gap:var(--spacing-1)] focus:outline-hidden
+                           origin-top transition duration-100 ease-out data-closed:scale-95 data-closed:opacity-0
                            dark:text-gray-300"
                 >
                   {AlgorithmValues.map((id) => {
@@ -159,13 +159,13 @@ const DropDownBar = ({ onDropDownOptionChange, algorithmSelected }: Props) => {
                         key={id}
                         value={id}
                         className={clsx(
-                          "group flex cursor-pointer items-center gap-2",
+                          "group flex items-center gap-2",
                           "rounded-lg py-1.5 px-3 select-none",
-                          "data-[focus]:bg-indigo-600 data-[focus]:text-white dark:data-[focus]:bg-indigo-700",
+                          "data-focus:bg-indigo-600 data-focus:text-white dark:data-focus:bg-indigo-700",
                           "text-gray-800 dark:text-gray-300"
                         )}
                       >
-                        <CheckIcon className="invisible size-4 fill-current group-data-[selected]:visible" />
+                        <CheckIcon className="invisible size-4 fill-current group-data-selected:visible" />
                         <div className="text-sm">{option.longName}</div>
                       </ListboxOption>
                     );
@@ -188,7 +188,7 @@ const DropDownBar = ({ onDropDownOptionChange, algorithmSelected }: Props) => {
                   className={clsx(
                     "group flex w-full items-center justify-between rounded-t-lg px-4 py-3 text-left text-sm",
                     "font-medium hover:bg-gray-100 dark:hover:bg-gray-700/20",
-                    "focus:outline-none focus-visible:ring focus-visible:ring-indigo-500 focus-visible:ring-opacity-75",
+                    "focus:outline-hidden focus-visible:ring-3 focus-visible:ring-indigo-500 focus-visible:ring-opacity-75",
                     open
                       ? "text-gray-900 dark:text-gray-300"
                       : "text-gray-400 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-400"
@@ -199,7 +199,7 @@ const DropDownBar = ({ onDropDownOptionChange, algorithmSelected }: Props) => {
                     {selectedAlgorithmDetails.shortDescription && (
                       <p
                         className={clsx(
-                          "text-xs font-normal mt-1 group-hover:text-gray-900 group-hover:dark:text-gray-400",
+                          "text-xs font-normal mt-1 group-hover:text-gray-900 dark:group-hover:text-gray-400",
                           open
                             ? "text-gray-600 dark:text-gray-400"
                             : "text-gray-500 dark:text-gray-400"

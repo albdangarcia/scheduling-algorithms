@@ -22,7 +22,7 @@ const UserProfileSection = ({ userSession }: Props) => (
     ) : (
       <div className="size-10 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center" />
     )}
-    <div className="flex-grow min-w-0">
+    <div className="grow min-w-0">
       <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
         {userSession?.user?.name ?? "User"}
       </p>

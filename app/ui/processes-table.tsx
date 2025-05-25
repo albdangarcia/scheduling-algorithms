@@ -120,7 +120,7 @@ const ProcessesTable = ({
                 return (
                   <td
                     key={id}
-                    className="whitespace-nowrap px-4 py-3 text-sm font-medium bg-gray-100/45 dark:bg-gray-900/45 rounded-sm text-right"
+                    className="whitespace-nowrap px-4 py-3 text-sm font-medium bg-gray-100/45 dark:bg-gray-900/45 rounded-xs text-right"
                   >
                     {option}
                   </td>

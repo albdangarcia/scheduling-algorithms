@@ -14,7 +14,7 @@ const NotFound = () => {
         <Link
           href="/"
           aria-label="Return Home"
-          className="inline-block rounded px-5 py-2.5 bg-black hover:bg-gray-800 text-white"
+          className="inline-block rounded-sm px-5 py-2.5 bg-black hover:bg-gray-800 text-white"
         >
           Return Home
         </Link>

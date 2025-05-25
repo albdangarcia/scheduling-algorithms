@@ -139,7 +139,7 @@ const MainContent = ({ userSession, inputFormList, initialHasMore }: Props) => {
   }, [processSuccessTrigger, userSession, displayedCount, refreshSidebarData]);
 
   return (
-    <main className="max-w-[48rem] w-full">
+    <main className="max-w-3xl w-full">
       {userSession ? (
         <SideBar
           setAlgorithmSelected={setalgorithmSelected}
