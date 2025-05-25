@@ -1,1 +1,1 @@
-CPU Scheduling Algorithms
+Visualization of CPU scheduling algorithms simulation with Gantt chart

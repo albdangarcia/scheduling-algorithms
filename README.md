@@ -68,9 +68,7 @@ To run the application as a Docker container, you need to have Docker installed 
 
 Here are some features I'm planning to add in the future to improve the animation experience:
 
-- **Animation Timeline Control**: We plan to add a slider that will allow users to control the animation timeline. This will provide users with the ability to move forwards and backwards through the animation at their own pace.
-
-- **Animation Speed Control**: We're also planning to add a feature that will allow users to control the speed of the animation. This will give users the ability to slow down or speed up the animation as needed.
+- **Animation Controls**: I plan to add features for controlling the animation experience using the GSAP library. These include a slider to control the animation timeline, allowing users to move forwards and backwards at their own pace, and a speed control to adjust the animation speed, enabling users to slow down or speed up as needed.
 
 ## Contributing
 

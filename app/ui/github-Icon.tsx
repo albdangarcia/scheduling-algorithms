@@ -1,8 +1,10 @@
-export default function GitHubIcon() {
+const GitHubIcon = () => {
   return (
-    <div className="absolute top-1 right-1 w-7 h-7 text-gray-310 fill-gray-800">
-    {/* <div className="w-7 h-7 text-gray-310 fill-gray-800"> */}
-      <a href="https://github.com/albdangarcia/scheduling-algorithms" aria-label="Link to GitHub profile">
+    <div className="absolute top-2.5 right-1.5 w-7 h-7 text-gray-310 fill-gray-800 dark:fill-gray-600">
+      <a
+        href="https://github.com/albdangarcia/scheduling-algorithms"
+        aria-label="Link to GitHub Repo"
+      >
         <svg
           width="100%"
           height="100%"
@@ -18,4 +20,6 @@ export default function GitHubIcon() {
       </a>
     </div>
   );
-}
+};
+
+export default GitHubIcon;

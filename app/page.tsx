@@ -1,22 +1,48 @@
-import { fetchCalculations } from "./lib/data/calculation";
+import { ITEMS_PER_PAGE } from "./lib/constants";
+import { fetchPaginatedSavedInputFormList } from "./lib/data/savedInputs";
+import {
+  RecentRecordsType,
+  PaginatedRecentRecordsResponse,
+} from "./lib/definitions";
 import GitHubIcon from "./ui/github-Icon";
 import MainContent from "./ui/main-content";
 import { auth } from "@/auth";
 
 const Page = async () => {
-  // Get the session
+  // Get user session
   const session = await auth();
 
-  const calculations = await fetchCalculations();
+  let initialRecords: RecentRecordsType[] = [];
+  let initialHasMore = false;
+
+  // Get the saved input form list only if the session is valid
+  // else skip the fetch
+  if (session) {
+    const paginatedResponse: PaginatedRecentRecordsResponse =
+      await fetchPaginatedSavedInputFormList({
+        skip: 0,
+        take: ITEMS_PER_PAGE,
+      });
+    initialRecords = paginatedResponse.records;
+    initialHasMore = paginatedResponse.hasMore;
+  }
 
   return (
     <div className="flex flex-col items-center px-4 pb-10">
-      {/* github icon */}
+      {/* Github Icon Link */}
       <GitHubIcon />
-      {/* gradient */}
-      <div id="small-gradient" />
-      {/* main content */}
-      <MainContent userSession={session} calcutionsList={calculations} />
+
+      {/* Background Gradients */}
+      <div className="gradient-layer-one"></div>
+      <div className="gradient-layer-two"></div>
+      <div className="gradient-layer-three"></div>
+
+      {/* Main Content */}
+      <MainContent
+        userSession={session}
+        inputFormList={initialRecords}
+        initialHasMore={initialHasMore}
+      />
     </div>
   );
 };

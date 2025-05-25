@@ -2,10 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-::selection {
-  color: #000000;
-  background: #babcff;
-}
+/* Style for idle process */
 .idle-stripes {
   background: repeating-linear-gradient(
     -55deg,
@@ -15,8 +12,9 @@
     #fff 20px
   );
 }
-/* animations */
-@keyframes readyQAnimation {
+
+/* Ready queue animation */
+@keyframes readyQ-animation {
   from {
     width: 0px;
   }
@@ -24,7 +22,8 @@
     width: 40px;
   }
 }
-@keyframes hideBarContainer {
+
+@keyframes hide-bar-container {
   from {
     width: 40px;
   }
@@ -32,6 +31,7 @@
     width: 0px;
   }
 }
+
 @keyframes fadeIn {
   0% {
     display: none;
@@ -46,6 +46,8 @@
     opacity: 1;
   }
 }
+
+/* Animation for the range number */
 @keyframes fadeInNumbers {
   from {
     opacity: 0;
@@ -54,6 +56,8 @@
     opacity: 1;
   }
 }
+
+/* Width Animation for the processes */
 @keyframes width-animation {
   from {
     width: 0%;
@@ -62,124 +66,12 @@
     width: 100%;
   }
 }
-.gradient {
-  &::before {
-    top: 1rem;
-    width: 210px;
-    height: 360px;
-    left: 50%;
-    transform: translateX(-30%);
-    border-radius: 50%;
-    background: conic-gradient(#87ceeb, #6f00ff);
-    filter: blur(2rem);
-    opacity: 0.2;
-  }
-  &::after {
-    top: 4rem;
-    left: 50%;
-    height: 180px;
-    width: 240px;
-    transform: translateX(-130%);
-    background: conic-gradient(#87ceeb, #2b00ff);
-    filter: blur(3rem);
-    opacity: 0.4;
-  }
-  @media (min-width: 400px) {
-    &::before {
-      width: 280px;
-    }
-  }
-  @media (min-width: theme("screens.sm")) {
-    &::before {
-      width: 480px;
-    }
-  }
-}
-main {
-  &::before {
-    top: 1rem;
-    height: 300px;
-    width: 216px;
-    left: 50%;
-    transform: translateX(-30%);
-    border-radius: 50%;
-    background: conic-gradient(#87ceeb, #ff003c);
-    filter: blur(1rem);
-    opacity: 0.1;
-  }
-  @media (min-width: 400px) {
-    &::before {
-      width: 280px;
-    }
-  }
-  @media (min-width: theme("screens.sm")) {
-    &::before {
-      width: 480px;
-    }
-  }
-}
-
-#small-gradient {
-  &::before {
-    top: 1rem;
-    width: 168px;
-    height: 360px;
-    left: 50%;
-    transform: translateX(-30%);
-    border-radius: 50%;
-    background: conic-gradient(#87ceeb, #0000ff);
-    filter: blur(2rem);
-    opacity: 0.2;
-  }
-  &::after {
-    top: 4rem;
-    left: 50%;
-    height: 180px;
-    width: 240px;
-    border-radius: 50%;
-    transform: translateX(-130%);
-    background: conic-gradient(#87ceeb, #0000ff);
-    filter: blur(3rem);
-    opacity: 0.4;
-  }
-  @media (min-width: 400px) {
-    &::before {
-      width: 280px;
-    }
-  }
-  @media (min-width: theme("screens.sm")) {
-    &::before {
-      width: 480px;
-    }
-  }
-}
-main::before,
-main::after,
-#small-gradient::before,
-#small-gradient::after,
-.gradient::before,
-.gradient::after {
-  content: "";
-  position: absolute;
-  z-index: -20;
-}
-
-.data-container {
-  display: flex;
-  width: 100%;
-  overflow: hidden;
-  border: 1px solid #eee;
-  padding: 4px;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
 
 .data-item {
   flex: 2 1 0;
-  overflow: hidden; /* clip content within the item's bounds */
+  overflow: hidden;
   white-space: nowrap;
   padding: 0 6px;
-  border-right: 1px solid #eee;
   display: flex;
   align-items: baseline;
   transition: background-color 0.2s ease-in-out;
@@ -189,7 +81,7 @@ main::after,
   border-right: none;
 }
 
-.data-item-slice {
+.data-item-quantum {
   flex-grow: 1;
 }
 
@@ -201,7 +93,7 @@ main::after,
 }
 
 .data-item .number-wrapper {
-  overflow: hidden; /* clips the animated span */
+  overflow: hidden;
   flex-grow: 1;
   vertical-align: baseline;
   min-width: 10px;
@@ -212,11 +104,10 @@ main::after,
   white-space: nowrap;
   will-change: transform;
   cursor: default;
-  /* Default translation */
   --marquee-translate-x: 0px;
 }
 
-/* --- Marquee Animation --- */
+/* Marquee Animation */
 @keyframes marquee {
   /* Start at the initial position */
   0% {
@@ -237,14 +128,14 @@ main::after,
   }
 }
 
-/* --- Conditional Hover & Animation --- */
-
-/* Apply hover background ONLY to the specific item being hovered IF it has the overflow class */
+/* Apply hover background ONLY to the specific 
+item being hovered IF it has the overflow class */
 .data-item.is-item-overflowing:hover {
   background-color: #f0f0f0;
 }
 
-/* Apply animation ONLY to the number-content inside a hovered data-item IF that data-item has the overflow class */
+/* Apply animation ONLY to the number-content inside a 
+hovered data-item IF that data-item has the overflow class */
 .data-item.is-item-overflowing:hover .number-content {
   /* The animation always runs on hover IF the item overflows */
   /* It will only *move* if --marquee-translate-x is non-zero */
@@ -254,5 +145,164 @@ main::after,
 
 /* Ensure no animation runs if the item is NOT overflowing, even on hover */
 .data-item:not(.is-item-overflowing) .number-content {
-  animation: none; /* remove animation */
+  animation: none;
+}
+
+.errorMessages {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: red;
+}
+
+.process-bar-animation {
+  animation-name: readyQ-animation, hide-bar-container;
+  animation-duration: 0s, 0.2s;
+  animation-timing-function: linear, linear;
+  animation-iteration-count: 1, 1;
+  animation-direction: normal, normal;
+  animation-fill-mode: both, forwards;
+  animation-play-state: running, running;
+  animation-delay: var(--arrival-time-delay), var(--start-time-delay);
+}
+
+:root {
+  /* Light Theme Gradient Colors */
+  --gradient-color-start: #00a2e2;
+  --gradient-color-end: #0000ff;
+  --gradient-1-start: #001aff;
+  --gradient-1-end: #6f00ff;
+  --gradient-2-start: #ff008c;
+  --gradient-2-end: #2b00ff;
+  --gradient-3-start: #0d9fb3;
+  --gradient-3-end: #ff003c;
+}
+
+::selection {
+  color: #000000;
+  background: #babcff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark Theme Gradient Colors */
+    --gradient-color-start: #3a7bd5;
+    --gradient-color-end: #1e007c;
+    --gradient-1-start: #001aff;
+    --gradient-1-end: #6f00ff;
+    --gradient-2-start: #ff008c;
+    --gradient-2-end: #2b00ff;
+    --gradient-3-start: #0d9fb3;
+    --gradient-3-end: #ff003c;
+  }
+  ::selection {
+    color: white;
+    background: #4c52ff;
+  }
+  .data-item.is-item-overflowing:hover {
+    background-color: #0000003b;
+  }
+  .errorMessages {
+    color: #e61345;
+  }
+}
+
+/* Background Gradients */
+.gradient-layer-one::before,
+.gradient-layer-one::after,
+.gradient-layer-two::before,
+.gradient-layer-two::after,
+.gradient-layer-three::before,
+.gradient-layer-three::after {
+  content: "";
+  position: absolute;
+  z-index: -20;
+  border-radius: 50%;
+}
+
+.gradient-layer-one::before {
+  top: 1rem;
+  width: 210px;
+  height: 360px;
+  left: 50%;
+  transform: translateX(-30%);
+  background: conic-gradient(var(--gradient-1-start), var(--gradient-1-end));
+  filter: blur(2rem);
+  opacity: 0.2;
+}
+
+.gradient-layer-one::after {
+  top: 4rem;
+  left: 50%;
+  height: 180px;
+  width: 240px;
+  transform: translateX(-130%);
+  background: conic-gradient(var(--gradient-2-start), var(--gradient-2-end));
+  filter: blur(3rem);
+  opacity: 0.4;
+}
+
+.gradient-layer-two,
+.gradient-layer-three {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.gradient-layer-two::before {
+  top: 1rem;
+  height: 300px;
+  width: 216px;
+  left: 50%;
+  transform: translateX(-30%);
+  background: conic-gradient(var(--gradient-3-start), var(--gradient-3-end));
+  filter: blur(1rem);
+  opacity: 0.1;
+}
+
+.gradient-layer-two::after {
+  top: 1rem;
+  width: 168px;
+  height: 360px;
+  left: 50%;
+  transform: translateX(-30%);
+  background: conic-gradient(
+    var(--gradient-color-start),
+    var(--gradient-color-end)
+  );
+  filter: blur(2rem);
+  opacity: 0.2;
+}
+
+.gradient-layer-three::before {
+  top: 4rem;
+  left: 50%;
+  height: 180px;
+  width: 240px;
+  transform: translateX(-130%);
+  background: conic-gradient(
+    var(--gradient-color-start),
+    var(--gradient-color-end)
+  );
+  filter: blur(3rem);
+  opacity: 0.4;
+}
+
+@media (min-width: 400px) {
+  .gradient-layer-one::before,
+  .gradient-layer-two::before,
+  .gradient-layer-two::after {
+    width: 280px;
+  }
+}
+
+@media (min-width: theme("screens.sm")) {
+  .gradient-layer-one::before,
+  .gradient-layer-two::before,
+  .gradient-layer-two::after {
+    width: 480px;
+  }
 }

@@ -1,23 +1,36 @@
 import { GanttProcess } from "@/app/lib/definitions";
+import clsx from "clsx";
+import { IDLE_PROCESS_ID } from "../lib/constants";
 
-export default function ReadyQueue({
-  ganttChartData,
-}: {
+interface Props {
   ganttChartData: GanttProcess[];
-}) {
+}
+
+// Renders a visual representation of the ready queue, showing processes waiting to be executed.
+const ReadyQueue = ({ ganttChartData }: Props) => {
   return (
-    <div className="flex items-center flex-col mb-[28px]">
-      <h5 className="font-medium text-sm">Ready Queue</h5>
-      <div className="bg-gray-100 min-w-[57px] flex px-[5px] py-[2px] rounded-sm">
+    <div className="flex items-center flex-col mb-[28px] mt-4">
+      <h3 className="font-medium text-sm text-black dark:text-gray-300 mb-2">
+        Ready Queue Visualization
+      </h3>
+      {/* Container for the process items in the ready queue */}
+      <div className="bg-gray-100 dark:bg-gray-800/50 min-w-[57px] flex px-[5px] py-[2px] rounded-sm">
         {ganttChartData.map(
-          (process, i) =>
-            process.id !== -1 && (
+          (
+            process,
+            i // Filter out idle processes from being displayed in the ready queue
+          ) =>
+            process.id !== IDLE_PROCESS_ID && (
               <div
-                className="flex justify-center items-center text-sm text-gray-800 font-medium overflow-hidden w-[43px] h-[29px] mr-[1px] rounded-sm shadow-[0_2px_3px_#bababa5c]"
+                className={clsx(
+                  "process-bar-animation flex justify-center items-center text-sm text-gray-800 font-medium",
+                  "overflow-hidden w-[43px] h-[29px] mr-[1px] rounded-sm shadow-[0_2px_3px_#bababa5c] dark:shadow-none"
+                )}
                 key={`${process.id}-${i}`}
                 style={{
+                  // Dynamic styles for process appearance and animation timing
                   backgroundColor: process.bgColor,
-                  animationName: "readyQAnimation, hideBarContainer",
+                  animationName: "readyQ-animation, hide-bar-container",
                   animationDuration: "0s, 0.2s",
                   animationTimingFunction: "linear, linear",
                   animationDelay: `${process.arrivalTime}s, ${process.startTime}s`,
@@ -27,6 +40,7 @@ export default function ReadyQueue({
                   animationPlayState: "running, running",
                 }}
               >
+                {/* Display process ID (e.g., P1, P2) */}
                 <div>{`P${process.id + 1}`}</div>
               </div>
             )
@@ -34,4 +48,6 @@ export default function ReadyQueue({
       </div>
     </div>
   );
-}
+};
+
+export default ReadyQueue;

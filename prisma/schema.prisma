@@ -2,38 +2,28 @@ datasource db {
   provider = "postgresql"
   url      = env("POSTGRES_URL")
 }
- 
+
 generator client {
   provider = "prisma-client-js"
+  //Prisma 7.0.0 will require a generator name https://pris.ly/cli/output-path
+  // output   = "prisma-client" // Prisma Client will be generated in the `prisma-client` directory
 }
- 
+
 model User {
-  id            String          @id @default(cuid())
+  id            String      @id @default(cuid())
   name          String?
-  email         String          @unique
+  email         String      @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
-  algorithms    AlgorithmInput[]
-  
+  savedInputs   InputForm[]
+
   // Optional for WebAuthn support
   Authenticator Authenticator[]
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model AlgorithmInput {
-  id             String   @id @default(cuid())
-  userId         String
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  algoName       String
-  arrivalValues  String?
-  burstValues    String?
-  priorityValues String?
-  timeSlice      Int?
-  createdAt      DateTime @default(now())
 }
 
 model Account {
@@ -48,33 +38,33 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([provider, providerAccountId])
 }
- 
+
 model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
- 
+
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@id([identifier, token])
 }
- 
+
 // Optional for WebAuthn support
 model Authenticator {
   credentialID         String  @unique
@@ -85,8 +75,40 @@ model Authenticator {
   credentialDeviceType String
   credentialBackedUp   Boolean
   transports           String?
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([userId, credentialID])
+}
+
+enum Algorithm {
+  fcfs
+  sjf
+  rr
+  priority
+}
+
+enum Preemption {
+  preemptive
+  nonPreemptive
+}
+
+model InputForm {
+  id                   String     @id @default(cuid())
+  algorithmSelected    Algorithm
+  preemption           Preemption
+  arrivalValues        Int[]
+  burstValues          Int[]
+  priorityValues       Int[]
+  timeQuantum          Int?
+  uniqueConstraintHash String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  @@unique([userId, uniqueConstraintHash])
+  @@index([userId])
 }
