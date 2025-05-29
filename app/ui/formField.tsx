@@ -11,30 +11,34 @@ import FieldError from "./field-error";
  * @param hasError Boolean indicating if the field has an error.
  * @returns A string of Tailwind CSS classes.
  */
-const getFieldClasses = (hasError: boolean | undefined): string => clsx(
-  // Base structure: padding, rounding, background, transition
-  "pt-2.5 pb-1.5 px-3 rounded-md bg-white dark:bg-gray-900 transition-all duration-150 ease-in-out",
-  // Conditional styling for rings
-  hasError
-    ? [ // --- ERROR STATE ---
-        "ring-2 ring-inset ring-offset-0",
-        "ring-red-700 dark:ring-red-600",   // Default error ring color
-        // Focused error ring color
-        "focus-within:ring-red-500 dark:focus-within:ring-red-500"
-      ]
-    : [ // --- NON-ERROR STATE ---
-        // Unfocused "double ring-3" (1px inner light + 1px outer dark = 2px total visual width)
-        "ring-1 ring-inset", // Base ring: 1px, inset.
-        "ring-white dark:ring-gray-800", // inner ring color
-        "ring-offset-1", // outer ring via offset: 1px.
-        "ring-offset-gray-300 dark:ring-offset-gray-950",
+const getFieldClasses = (hasError: boolean | undefined): string =>
+  clsx(
+    // Base structure: padding, rounding, background, transition
+    "pt-2.5 pb-1.5 px-3 rounded-md bg-white dark:bg-gray-900 transition-all duration-150 ease-in-out",
+    // Conditional styling for rings
+    hasError
+      ? [
+          // --- ERROR STATE ---
+          "ring-2 ring-inset ring-offset-0",
+          "ring-red-700 dark:ring-red-600", // Default error ring color
+          // Focused error ring color
+          "focus-within:ring-red-500 dark:focus-within:ring-red-500",
+        ]
+      : [
+          // --- NON-ERROR STATE ---
+          // Unfocused "double ring-3" (1px inner light + 1px outer dark = 2px total visual width)
+          "ring-1 ring-inset", // Base ring: 1px, inset.
+          "ring-white dark:ring-gray-800", // inner ring color
+          "ring-offset-1", // outer ring via offset: 1px.
+          "ring-offset-gray-300 dark:ring-offset-gray-950",
+          "group-hover:dark:ring-gray-600", // Apply hover styling only when not active
 
-        // Focused state (overrides unfocused styles)
-        "focus-within:ring-2", // On focus, ring becomes 2px.
-        "focus-within:ring-indigo-500 dark:focus-within:ring-indigo-500", // Ring color becomes indigo.
-        "focus-within:ring-offset-0" // Offset is removed on focus for a solid ring.
-      ]
-);
+          // Focused state (overrides unfocused styles)
+          "focus-within:ring-2", // On focus, ring becomes 2px.
+          "focus-within:ring-indigo-500 dark:focus-within:ring-indigo-500", // Ring color becomes indigo.
+          "focus-within:ring-offset-0", // Offset is removed on focus for a solid ring.
+        ]
+  );
 
 interface FormFieldProps {
   id: string;
@@ -74,7 +78,7 @@ const FormField = ({
 
   return (
     // This div receives the unique styling passed from the parent.
-    <div className={fieldContainerClassName}>
+    <div className={clsx("group", fieldContainerClassName)}>
       <Field className={fieldDynamicClasses}>
         <Label
           htmlFor={id}
