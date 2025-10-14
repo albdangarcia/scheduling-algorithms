@@ -58,23 +58,25 @@ const parseNumberString = (
 // --- Base Schema for Raw String Inputs from the Form ---
 // This schema defines the shape and basic validation for raw string inputs.
 const RawFormSchema = z.object({
-  algorithmSelected: z.nativeEnum(Algorithm, {
-    required_error: "Algorithm selection is required.",
-    invalid_type_error: "Invalid algorithm selected.",
-  }),
-  preemption: z.nativeEnum(Preemption, {
-    required_error: "Preemption option is required.",
-    invalid_type_error: "Invalid preemption option selected.",
-  }),
+  algorithmSelected: z.enum(Algorithm, {
+      error: (issue) => issue.input === undefined ? "Algorithm selection is required." : "Invalid algorithm selected."
+}),
+  preemption: z.enum(Preemption, {
+      error: (issue) => issue.input === undefined ? "Preemption option is required." : "Invalid preemption option selected."
+}),
   // Arrival times: required, non-empty string of numbers and spaces
   arrivalTimeValues: z
-    .string({ required_error: "Arrival times are required." })
+    .string({
+        error: (issue) => issue.input === undefined ? "Arrival times are required." : undefined
+    })
     .min(1, "Arrival times cannot be empty.")
     .regex(/^[0-9\s]*$/, "Arrival Times must contain only numbers and spaces.")
     .trim(), // Trim whitespace
   // Burst times: required, non-empty string of numbers and spaces
   burstTimeValues: z
-    .string({ required_error: "Burst times are required." })
+    .string({
+        error: (issue) => issue.input === undefined ? "Burst times are required." : undefined
+    })
     .min(1, "Burst times cannot be empty.")
     .regex(/^[0-9\s]*$/, "Burst Times must contain only numbers and spaces.")
     .trim(), // Trim whitespace
@@ -104,8 +106,7 @@ const RawFormSchema = z.object({
           return /^\d+$/.test(val); // Ensures "123" is valid, but " 123", "123 ", "abc", "1.2" are not.
         },
         {
-          message:
-            "Time Quantum must contain only digits (e.g., '100' or '42') and no spaces or other characters.",
+            error: "Time Quantum must contain only digits (e.g., '100' or '42') and no spaces or other characters."
         }
       )
       .optional() // Makes the field itself optional in the raw input object.
@@ -132,7 +133,7 @@ export const CreateFormSchema = RawFormSchema.transform((data, ctx) => {
     });
   } catch (e: any) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: "custom",
       path: ["arrivalTimeValues"],
       message: e.message,
     });
@@ -147,7 +148,7 @@ export const CreateFormSchema = RawFormSchema.transform((data, ctx) => {
     });
   } catch (e: any) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: "custom",
       path: ["burstTimeValues"],
       message: e.message,
     });
@@ -163,7 +164,7 @@ export const CreateFormSchema = RawFormSchema.transform((data, ctx) => {
       });
     } catch (e: any) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: "custom",
         path: ["priorityValues"],
         message: e.message,
       });
@@ -179,7 +180,7 @@ export const CreateFormSchema = RawFormSchema.transform((data, ctx) => {
     // Validate that the number is a whole number and within the 1-1000 range.
     if (isNaN(num) || !Number.isInteger(num) || num < 1 || num > 1000) {
       ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+        code: "custom",
         path: ["timeQuantum"],
         message: "Time Quantum must be a whole number between 1 and 1000.",
       });
@@ -202,7 +203,7 @@ export const CreateFormSchema = RawFormSchema.transform((data, ctx) => {
   // Ensure arrival times and burst times have the same number of entries
   if (data.arrivalTimeValues.length !== data.burstTimeValues.length) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: "custom",
       path: ["burstTimeValues"], // Error associated with burst times for UI
       message: "Number of Burst Times must match number of Arrival Times.",
     });
@@ -213,7 +214,7 @@ export const CreateFormSchema = RawFormSchema.transform((data, ctx) => {
     data.priorityValues.length !== data.arrivalTimeValues.length
   ) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: "custom",
       path: ["priorityValues"], // Error associated with priority values
       message:
         "Number of Priority Values must match number of Arrival/Burst Times.",
@@ -227,7 +228,7 @@ export const CreateFormSchema = RawFormSchema.transform((data, ctx) => {
   // Round Robin (rr) specific validation
   if (algo === Algorithm.rr && data.timeQuantum === undefined) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: "custom",
       path: ["timeQuantum"],
       message: "Time Quantum is required for Round Robin algorithm.",
     });
@@ -236,7 +237,7 @@ export const CreateFormSchema = RawFormSchema.transform((data, ctx) => {
   // Priority algorithm specific validation
   if (algo === Algorithm.priority && data.priorityValues === undefined) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: "custom",
       path: ["priorityValues"],
       message: "Priority Values are required for Priority algorithm.",
     });
@@ -245,7 +246,7 @@ export const CreateFormSchema = RawFormSchema.transform((data, ctx) => {
   // FCFS specific validation (cannot be preemptive)
   if (algo === Algorithm.fcfs && isPreemptive) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: "custom",
       path: ["preemption"],
       message: "FCFS algorithm cannot be preemptive.",
     });
@@ -254,7 +255,7 @@ export const CreateFormSchema = RawFormSchema.transform((data, ctx) => {
   // Round Robin specific validation (must be preemptive)
   if (algo === Algorithm.rr && !isPreemptive) {
     ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+      code: "custom",
       path: ["preemption"],
       message: "Round Robin algorithm must be preemptive.",
     });
