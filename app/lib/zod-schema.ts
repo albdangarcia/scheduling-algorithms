@@ -131,11 +131,11 @@ export const CreateFormSchema = RawFormSchema.transform((data, ctx) => {
       context: "Arrival Times",
       maxLength: MAX_PROCESS_INPUT_LENGTH, // Max 20 processes input
     });
-  } catch (e: any) {
+  } catch (e) {
     ctx.addIssue({
       code: "custom",
       path: ["arrivalTimeValues"],
-      message: e.message,
+      message: e instanceof Error ? e.message : "Invalid arrival times",
     });
   }
 
@@ -146,11 +146,11 @@ export const CreateFormSchema = RawFormSchema.transform((data, ctx) => {
       context: "Burst Times",
       maxLength: MAX_PROCESS_INPUT_LENGTH, // Max 20 processes
     });
-  } catch (e: any) {
+  } catch (e) {
     ctx.addIssue({
       code: "custom",
       path: ["burstTimeValues"],
-      message: e.message,
+      message: e instanceof Error ? e.message : "Invalid burst times",
     });
   }
 
@@ -162,11 +162,11 @@ export const CreateFormSchema = RawFormSchema.transform((data, ctx) => {
         context: "Priority Values",
         maxLength: MAX_PROCESS_INPUT_LENGTH, // Max 20 processes
       });
-    } catch (e: any) {
+    } catch (e) {
       ctx.addIssue({
         code: "custom",
         path: ["priorityValues"],
-        message: e.message,
+        message: e instanceof Error ? e.message : "Invalid priority values",
       });
     }
   }

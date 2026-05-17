@@ -39,7 +39,7 @@ export interface ISchedulerStrategy {
     readyQueue: Readonly<Process[]>, // Readonly to prevent modification here
     currentTime: number,
     processArray: Readonly<Process[]>, // Readonly view of all processes
-    timeQuantum?: number
+    timeQuantum?: number,
   ): {
     timeAdvanced: number;
     remainingBurst: number;
@@ -53,9 +53,15 @@ export interface ISchedulerStrategy {
 // FCFS Strategy
 export class FCFSStrategy implements ISchedulerStrategy {
   // FCFS does not require sorting the ready queue beyond arrival order.
-  sortReadyQueue(readyQueue: Process[]): void {}
+  sortReadyQueue(_readyQueue: Process[]): void {}
 
-  executeStep(currentProcess: Process) {
+  executeStep(
+    currentProcess: Process,
+    _readyQueue: Readonly<Process[]>,
+    _currentTime: number,
+    _processArray: Readonly<Process[]>,
+    _timeQuantum?: number,
+  ) {
     // FCFS processes run for their entire remaining burst time.
     const timeAdvanced = currentProcess.burstTime;
     return {
@@ -82,7 +88,7 @@ export class SJFStrategy implements ISchedulerStrategy {
     currentProcess: Process,
     readyQueue: Readonly<Process[]>,
     currentTime: number,
-    processArray: Readonly<Process[]> // All processes, sorted by arrival
+    processArray: Readonly<Process[]>, // All processes, sorted by arrival
   ) {
     if (!this.isPreemptive) {
       // Non-preemptive: runs for its entire remaining burst time.
@@ -102,8 +108,8 @@ export class SJFStrategy implements ISchedulerStrategy {
       // Check for preemption by future arrivals.
       // Find the index of the first process arriving at or after currentTime.
       // This avoids re-scanning processes that have already arrived.
-      let nextArrivalIdx = processArray.findIndex(
-        (p) => p.arrivalTime >= currentTime && p.id !== currentProcess.id // Exclude self if it was put back
+      const nextArrivalIdx = processArray.findIndex(
+        (p) => p.arrivalTime >= currentTime && p.id !== currentProcess.id, // Exclude self if it was put back
       );
 
       if (nextArrivalIdx !== -1) {
@@ -166,14 +172,14 @@ export class PriorityStrategy implements ISchedulerStrategy {
     currentProcess: Process,
     readyQueue: Readonly<Process[]>,
     currentTime: number,
-    processArray: Readonly<Process[]> // FULL original list, sorted by arrivalTime
+    processArray: Readonly<Process[]>, // FULL original list, sorted by arrivalTime
   ) {
     if (
       currentProcess.priority === undefined ||
       currentProcess.priority === null
     ) {
       throw new Error(
-        `Process ${currentProcess.id} is missing priority for comparison.`
+        `Process ${currentProcess.id} is missing priority for comparison.`,
       );
     }
 
@@ -195,8 +201,8 @@ export class PriorityStrategy implements ISchedulerStrategy {
       // Check for preemption by future arrivals.
       // Find the index of the first process arriving *after* currentTime.
       // processArray is assumed to be sorted by arrivalTime.
-      let nextArrivalIdx = processArray.findIndex(
-        (p) => p.arrivalTime > currentTime && p.id !== currentProcess.id
+      const nextArrivalIdx = processArray.findIndex(
+        (p) => p.arrivalTime > currentTime && p.id !== currentProcess.id,
       );
 
       if (nextArrivalIdx !== IDLE_PROCESS_ID) {
@@ -209,7 +215,7 @@ export class PriorityStrategy implements ISchedulerStrategy {
             arrivalCandidate.priority === null
           ) {
             console.warn(
-              `Skipping arrival candidate ${arrivalCandidate.id} for preemption check due to missing priority.`
+              `Skipping arrival candidate ${arrivalCandidate.id} for preemption check due to missing priority.`,
             );
             continue;
           }
@@ -252,7 +258,7 @@ export class PriorityStrategy implements ISchedulerStrategy {
 // Round Robin Strategy
 export class RRStrategy implements ISchedulerStrategy {
   // RR does not require specific sorting of the ready queue beyond arrival order.
-  sortReadyQueue(readyQueue: Process[]): void {}
+  sortReadyQueue(_readyQueue: Process[]): void {}
 
   /**
    * Executes a step for Round Robin.
@@ -266,10 +272,10 @@ export class RRStrategy implements ISchedulerStrategy {
    */
   executeStep(
     currentProcess: Process,
-    readyQueue: Readonly<Process[]>, // Not used by RR for this step's calculation
-    currentTime: number, // Not used by RR for this step's calculation
-    processArray: Readonly<Process[]>, // Not used by RR for this step's calculation
-    timeQuantum?: number
+    _readyQueue: Readonly<Process[]>, // Not used by RR for this step's calculation
+    _currentTime: number, // Not used by RR for this step's calculation
+    _processArray: Readonly<Process[]>, // Not used by RR for this step's calculation
+    timeQuantum?: number,
   ): {
     timeAdvanced: number;
     remainingBurst: number;
@@ -278,7 +284,7 @@ export class RRStrategy implements ISchedulerStrategy {
   } {
     if (timeQuantum === undefined || timeQuantum === null || timeQuantum <= 0) {
       throw new Error(
-        "Time quantum must be defined and positive for Round Robin."
+        "Time quantum must be defined and positive for Round Robin.",
       );
     }
 
@@ -302,7 +308,7 @@ export class RRStrategy implements ISchedulerStrategy {
 // Factory function to get the appropriate scheduling strategy.
 export function getSchedulerStrategy(
   algorithm: Algorithm,
-  isPreemptive: boolean
+  isPreemptive: boolean,
 ): ISchedulerStrategy {
   switch (algorithm) {
     case Algorithm.fcfs:
@@ -323,7 +329,7 @@ export function getSchedulerStrategy(
 function processHasArrived(
   processArray: Process[], // Mutable array of processes yet to arrive
   currentTime: number,
-  readyQueue: Process[] // Mutable ready queue
+  readyQueue: Process[], // Mutable ready queue
 ): boolean {
   let addedProcess = false;
   // Peek and check condition before removing from processArray.
@@ -412,7 +418,7 @@ export const performAlgorithm = ({
       const originalProcessData = processMap.get(currentProcess.id);
       if (!originalProcessData) {
         console.error(
-          `Original data for process ID ${currentProcess.id} not found in processMap.`
+          `Original data for process ID ${currentProcess.id} not found in processMap.`,
         );
         continue;
       }
@@ -425,7 +431,7 @@ export const performAlgorithm = ({
         readyQueue, // Pass read-only readyQueue for preemption checks by strategy
         currentTime,
         processArrayReadOnly, // Pass all processes for preemption checks by strategy
-        curTimeQuantum
+        curTimeQuantum,
       );
 
       currentTime += executionResult.timeAdvanced;
@@ -481,7 +487,7 @@ export const performAlgorithm = ({
           totalWaitingTime += waitingTime;
         } else {
           console.error(
-            `Process ID ${currentProcess.id} not found in processMap for metrics update.`
+            `Process ID ${currentProcess.id} not found in processMap for metrics update.`,
           );
         }
       } else {
@@ -534,7 +540,7 @@ export const performAlgorithm = ({
     totalCompletionTime,
     totalTurnAroundTime,
     totalWaitingTime,
-    processTable.length // Use the count of original processes for average calculation.
+    processTable.length, // Use the count of original processes for average calculation.
   );
   return { gantt, totalAverages };
 };
@@ -544,7 +550,7 @@ export const calculateTotalAverages = (
   totalCompletionTime: number,
   totalTurnAroundTime: number,
   totalWaitingTime: number,
-  numberOfProcesses: number
+  numberOfProcesses: number,
 ): TotalAveragesRecord => {
   if (numberOfProcesses <= 0) {
     // Avoid division by zero; return zeros if no processes.
@@ -556,13 +562,13 @@ export const calculateTotalAverages = (
   }
   return {
     completionTimeAverage: roundToTwoDecimals(
-      totalCompletionTime / numberOfProcesses
+      totalCompletionTime / numberOfProcesses,
     ),
     turnAroundTimeAverage: roundToTwoDecimals(
-      totalTurnAroundTime / numberOfProcesses
+      totalTurnAroundTime / numberOfProcesses,
     ),
     waitingTimeAverage: roundToTwoDecimals(
-      totalWaitingTime / numberOfProcesses
+      totalWaitingTime / numberOfProcesses,
     ),
   };
 };

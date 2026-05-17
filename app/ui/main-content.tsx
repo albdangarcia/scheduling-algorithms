@@ -69,7 +69,7 @@ const MainContent = ({ userSession, inputFormList, initialHasMore }: Props) => {
 
   const [sidebarListError, setSidebarListError] = useState<string | null>(null);
   const [isAppending, startAppendTransition] = useTransition();
-  const [isRefreshing, startRefreshTransition] = useTransition();
+  const [_isRefreshing, startRefreshTransition] = useTransition();
   const [processSuccessTrigger, setProcessSuccessTrigger] = useState(0);
   const prevSuccessRef = useRef<boolean | null | undefined>(undefined);
 
@@ -85,7 +85,7 @@ const MainContent = ({ userSession, inputFormList, initialHasMore }: Props) => {
         setSavedInputs((prev) => [...prev, ...newInputs]);
         setHasMore(newHasMore);
         setDisplayedCount((prevCount) => prevCount + newInputs.length);
-      } catch (error) {
+      } catch {
         setSidebarListError("Failed to load more. Please try again.");
       }
     });
@@ -105,7 +105,7 @@ const MainContent = ({ userSession, inputFormList, initialHasMore }: Props) => {
           setSavedInputs(records);
           setHasMore(newHasMore);
           setDisplayedCount(records.length);
-        } catch (error) {
+        } catch {
           setSidebarListError("Failed to refresh list. Please try again.");
         }
       });

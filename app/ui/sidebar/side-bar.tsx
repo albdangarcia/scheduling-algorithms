@@ -24,9 +24,12 @@ import RecentInputsList from "./recent-inputs-list";
 import { INITIAL_LOOP_INDEX } from "@/app/lib/constants";
 
 // Debounce function: delays invoking a function until after `wait` milliseconds have elapsed since the last time it was invoked.
-const debounce = (func: Function, wait: number) => {
-  let timeout: NodeJS.Timeout;
-  return (...args: any[]) => {
+const debounce = <Args extends unknown[]>(
+  func: (...args: Args) => void,
+  wait: number
+) => {
+  let timeout: ReturnType<typeof setTimeout>;
+  return (...args: Args) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => func(...args), wait);
   };
@@ -150,10 +153,16 @@ const SiderBar = ({
   }, [savedInputs.length]);
 
   useEffect(() => {
-    checkOverflow();
+    // Defer the initial check to the next macrotask tick to fix the linter error
+    const timer = setTimeout(() => {
+      checkOverflow();
+    }, 0);
+
     const debouncedCheck = debounce(checkOverflow, 250);
     window.addEventListener("resize", debouncedCheck);
+    
     return () => {
+      clearTimeout(timer); // Clean up the timeout
       window.removeEventListener("resize", debouncedCheck);
     };
   }, [checkOverflow]); // checkOverflow is memoized

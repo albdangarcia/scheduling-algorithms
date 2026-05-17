@@ -41,7 +41,7 @@ const DeleteAccountButton = ({ deleteAction }: DeleteAccountButtonProps) => {
         if (result && result.error) {
           setError(result.error);
         }
-      } catch (e) {
+      } catch {
         // Catch unexpected errors
         setError("An unexpected error occurred. Please try again.");
       }

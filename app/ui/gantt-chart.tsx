@@ -1,6 +1,6 @@
 import { GanttProcess } from "@/app/lib/definitions";
 import clsx from "clsx";
-import React, { useEffect, useState } from "react";
+import React, { useSyncExternalStore } from "react";
 import { IDLE_PROCESS_ID } from "../lib/constants";
 
 // --- Configuration Constants ---
@@ -81,10 +81,11 @@ interface GanttChartResultProps {
 const GanttChartResult = ({ ganttChartData }: GanttChartResultProps) => {
   // State to track if the component has mounted on the client-side
   // This is used to safely access `window.innerWidth`
-  const [isClient, setIsClient] = useState(false);
-  useEffect(() => {
-    setIsClient(true); // Set to true after component mounts
-  }, []);
+  const isClient = useSyncExternalStore(
+     () => () => {}, // Empty subscribe function since "isClient" status doesn't change post-mount
+     () => true,     // Client snapshot
+     () => false     // Server snapshot (SSR default)
+   );
 
   // Handle cases where there is no data to display
   if (!ganttChartData || ganttChartData.length === 0) {

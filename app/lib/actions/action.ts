@@ -185,7 +185,7 @@ export const createFormInput = async (
         totalAverages: totalAverages,
       },
     };
-  } catch (error) {
+  } catch {
     // Generic error for unexpected issues.
     return {
       message: "An unexpected error occurred. Please try again.",
