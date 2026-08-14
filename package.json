@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && prisma migrate deploy && next build",
+    "build": "prisma migrate deploy && next build",
     "start": "next start",
     "lint": "eslint",
     "test": "jest",
-    "db": "npx prisma generate && npx prisma db push"
+    "db": "npx prisma generate && npx prisma db push",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.0",
@@ -17,10 +18,10 @@
     "@neondatabase/serverless": "^1.0.2",
     "@prisma/client": "^6.17.1",
     "clsx": "^2.1.1",
-    "next": "16.2.6",
-    "next-auth": "^5.0.0-beta.29",
-    "react": "19.2.6",
-    "react-dom": "19.2.6",
+    "next": "^16.3.1",
+    "next-auth": "^5.0.0-beta.32",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "zod": "^4.1.12"
   },
   "devDependencies": {
@@ -30,10 +31,10 @@
     "@testing-library/react": "^16.3.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^20.17.30",
-    "@types/react": "19.2.14",
-    "@types/react-dom": "19.2.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
     "eslint": "^9.25.1",
-    "eslint-config-next": "16.2.6",
+    "eslint-config-next": "^16.3.1",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
     "prisma": "^6.17.1",
