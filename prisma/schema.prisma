@@ -1,12 +1,10 @@
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL") // uses a connection pool
+  provider = "postgresql"
 }
 
 generator client {
-  provider = "prisma-client-js"
-  // Prisma ORM 7 will require a generator name https://pris.ly/cli/output-path
-  // output   = "prisma-client" // Prisma Client will be generated in the `prisma-client` directory
+  provider = "prisma-client"
+  output   = "./generated"
 }
 
 model User {

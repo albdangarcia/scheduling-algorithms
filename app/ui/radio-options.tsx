@@ -4,7 +4,7 @@ import { Radio, RadioGroup } from "@headlessui/react";
 import { Dispatch, SetStateAction } from "react";
 import { RadioOptionType } from "../lib/definitions";
 import clsx from "clsx";
-import { Preemption, Algorithm } from "@prisma/client";
+import { Preemption, Algorithm } from "@/prisma/generated/enums";
 import { CheckCircleIcon } from "@heroicons/react/20/solid";
 
 // Available preemption options

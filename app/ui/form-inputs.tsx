@@ -4,7 +4,7 @@ import clsx from "clsx";
 import React from "react";
 import { PropsScheduleInputTypes } from "../lib/definitions";
 import { InputFormError } from "../lib/zod-schema";
-import { Algorithm } from "@prisma/client";
+import { Algorithm } from "@/prisma/generated/enums";
 import FormField from "./formField";
 
 interface Props {

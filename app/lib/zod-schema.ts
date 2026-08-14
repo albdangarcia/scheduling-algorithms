@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { ResultsSectionTypes } from "./definitions";
-import { Algorithm, Preemption } from "@prisma/client";
+import { Algorithm, Preemption } from "@/prisma/generated/enums";
 
 const MAX_PROCESS_INPUT_LENGTH = 20;
 

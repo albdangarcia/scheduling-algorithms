@@ -5,7 +5,7 @@ import {
   TotalAveragesRecord,
   TotalAveragesRecordNamesTypes,
 } from "./definitions";
-import { Algorithm } from "@prisma/client";
+import { Algorithm } from "@/prisma/generated/enums";
 import { IDLE_PROCESS_ID } from "./constants";
 
 // ======= Strategy Pattern =======

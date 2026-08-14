@@ -19,7 +19,7 @@ import {
   ChevronUpIcon,
 } from "@heroicons/react/16/solid";
 import clsx from "clsx";
-import { Algorithm } from "@prisma/client";
+import { Algorithm } from "@/prisma/generated/enums";
 import { ScheduleType } from "../lib/definitions";
 
 // Defines the display names and descriptions for each algorithm

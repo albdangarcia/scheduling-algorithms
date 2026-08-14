@@ -5,7 +5,7 @@ import RadioOptions from "./radio-options";
 import DropDownBar from "./dropdown-bar";
 import FormInputs from "./form-inputs";
 import { InputFormError } from "../lib/zod-schema";
-import { Preemption, Algorithm } from "@prisma/client";
+import { Preemption, Algorithm } from "@/prisma/generated/enums";
 import { useTransition } from "react";
 
 interface Props {

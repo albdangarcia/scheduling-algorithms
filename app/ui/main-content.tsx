@@ -19,7 +19,7 @@ import {
   refreshSavedInputsAction,
 } from "../lib/actions/action";
 import SignIn from "./auth/signin-button";
-import { Algorithm, Preemption } from "@prisma/client";
+import { Algorithm, Preemption } from "@/prisma/generated/enums";
 import SideBar from "./sidebar/side-bar";
 import { initialActionState } from "../lib/constants";
 

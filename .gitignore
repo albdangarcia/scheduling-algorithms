@@ -9,6 +9,9 @@
 # testing
 /coverage
 
+# prisma
+/prisma/generated
+
 # next.js
 /.next/
 /out/

@@ -1,4 +1,4 @@
-import { Preemption, Algorithm } from '@prisma/client';
+import { Preemption, Algorithm } from "@/prisma/generated/enums";
 
 // process interface
 export interface Process {

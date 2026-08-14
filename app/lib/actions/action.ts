@@ -5,7 +5,7 @@ import { getProcesses } from "../helperfunctions";
 import { performAlgorithm } from "../scheduleAlgorithm";
 import { prisma } from "@/app/lib/prisma";
 import { createHash } from "crypto";
-import { Algorithm, Preemption } from "@prisma/client";
+import { Algorithm, Preemption } from "@/prisma/generated/enums";
 import { revalidatePath } from "next/cache";
 import crypto from "crypto";
 import {

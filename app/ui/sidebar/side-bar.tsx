@@ -14,7 +14,7 @@ import {
   SetStateAction,
 } from "react";
 import clsx from "clsx";
-import { Algorithm, Preemption } from "@prisma/client";
+import { Algorithm, Preemption } from "@/prisma/generated/enums";
 import type { Session } from "next-auth";
 import UserProfileSection from "./user-profile-section";
 import SideBarBurgerButton from "./burger-icon";
