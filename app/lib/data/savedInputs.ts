@@ -1,4 +1,4 @@
-import { prisma } from "@/app/lib/prisma";
+import prisma from "@/app/lib/prisma";
 import { getAuthenticatedUserId } from "../auth-utils";
 import { ITEMS_PER_PAGE } from "../constants";
 import { PaginatedRecentRecordsResponse } from "../definitions";

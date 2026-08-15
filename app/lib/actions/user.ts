@@ -2,7 +2,7 @@
 
 import { signOut } from "@/auth";
 import { redirect } from "next/navigation";
-import { prisma } from "@/app/lib/prisma";
+import prisma from "@/app/lib/prisma";
 import { AuthenticationError, getAuthenticatedUserId } from "../auth-utils";
 
 // Server action to delete user account

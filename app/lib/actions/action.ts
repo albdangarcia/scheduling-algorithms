@@ -3,7 +3,7 @@
 import { CreateFormSchema, InputFormError } from "../zod-schema";
 import { getProcesses } from "../helperfunctions";
 import { performAlgorithm } from "../scheduleAlgorithm";
-import { prisma } from "@/app/lib/prisma";
+import prisma from "@/app/lib/prisma";
 import { createHash } from "crypto";
 import { Algorithm, Preemption } from "@/prisma/generated/enums";
 import { revalidatePath } from "next/cache";
