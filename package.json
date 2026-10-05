@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma migrate deploy && next build",
+    "build": "NODE_ENV=production prisma migrate deploy && next build",
     "postinstall": "prisma generate",
     "start": "next start",
     "lint": "eslint",
@@ -27,12 +27,12 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@next/env": "16.3.8",
     "@tailwindcss/postcss": "^4.1.14",
     "@types/node": "^20.17.30",
     "@types/pg": "^8.21.0",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "dotenv": "^17.4.2",
     "eslint": "^9.25.1",
     "eslint-config-next": "^16.3.8",
     "prisma": "^7.9.1",

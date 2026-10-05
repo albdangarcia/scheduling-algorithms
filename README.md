@@ -35,6 +35,9 @@ Follow these steps to run this project on your local machine.
 
 3. **Install the dependencies**
 
+   Configure your environment variables as described below before installing:
+   installation runs `prisma generate`, which loads the Prisma configuration.
+
    Now, you can install the dependencies required for the project with:
 
    ```shell
@@ -94,6 +97,29 @@ This project requires certain environment variables to be set up for it to run c
         *   These are only needed if you want to enable GitHub authentication. You'll need to register an OAuth application on GitHub (under Settings > Developer settings) to get these credentials.
 
 Make sure to save the `.env` file after configuring your variables. This file is typically included in `.gitignore` and should not be committed to your repository, especially if it contains sensitive credentials.
+
+### Environment loading for Next.js and Prisma
+
+Next.js loads environment files for the application. Prisma CLI commands run
+outside Next.js, so `prisma.config.ts` uses `@next/env` to load the same files,
+with the same variable expansion and precedence. Existing process environment
+variables take priority over files.
+
+Local Prisma commands (including `npm run db` and the install-time client
+generation) default to development mode: `.env.development.local`, `.env.local`,
+`.env.development`, then `.env`. `npm run build` explicitly runs its migration
+step in production mode, matching `next build` and `next start`:
+`.env.production.local`, `.env.local`, `.env.production`, then `.env`.
+With `NODE_ENV=test`, `.env.local` is skipped and test-specific files are used.
+For standalone production Prisma commands, set `NODE_ENV=production`, for
+example `NODE_ENV=production npx prisma migrate deploy`.
+
+Prisma chooses its database URL from `DATABASE_URL_UNPOOLED`,
+`POSTGRES_URL_NON_POOLING`, `POSTGRES_URL`, then `DATABASE_URL`. The application
+uses `POSTGRES_URL`, then `DATABASE_URL`. Configure these to point at the same
+database, using an unpooled connection for migrations when needed. On deployment,
+supply these variables through the hosting environment; Docker Compose's
+`env_file` injects them at container runtime, not during the image build.
 
 ### Docker Container
 
