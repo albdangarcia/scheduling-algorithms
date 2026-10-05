@@ -35,8 +35,9 @@ Follow these steps to run this project on your local machine.
 
 3. **Install the dependencies**
 
-   Configure your environment variables as described below before installing:
-   installation runs `prisma generate`, which loads the Prisma configuration.
+   Installation runs `prisma generate`. Client generation works without database
+   credentials; configure your environment before starting the app or running
+   database commands.
 
    Now, you can install the dependencies required for the project with:
 
@@ -72,23 +73,17 @@ This project requires certain environment variables to be set up for it to run c
 
     Here's a breakdown of the variables:
 
-    *   **PostgreSQL Connection Details:**
-        *   `POSTGRES_USER`: Your PostgreSQL username.
-        *   `POSTGRES_PASSWORD`: Your PostgreSQL password.
-        *   `POSTGRES_HOST`: Set to `postgres` if you're using the Docker Compose setup (as it matches the service name). If you're running PostgreSQL directly on your machine, you might use `localhost`.
-        *   `POSTGRES_DB`: The name of your PostgreSQL database.
-        *   `POSTGRES_PORT`: The port PostgreSQL is running on (default is `5432`).
-
     *   **Auth.js Configuration:**
         *   `AUTH_SECRET`: A strong, random secret string used to sign and encrypt tokens and cookies for authentication.
             *   **Important:** Generate a strong secret. You can use the command `openssl rand -base64 32` in your terminal or visit a site like https://generate-secret.vercel.app/32.
+        *   `AUTH_URL`: Use `http://localhost:3000` locally, or your deployed application's origin. Register the matching `/api/auth/callback/github` URL in your GitHub OAuth app.
 
     *   **Application Environment:**
-        *   `NODE_ENV`: Set to `development`, `test`, or `production` depending on the environment.
+        *   `NODE_ENV`: Next.js selects development mode for `npm run dev` and production mode for builds and startup. Docker Compose explicitly runs the application and migrations in production mode.
 
     *   **Full Database Connection URL:**
-        *   `DATABASE_URL`: This is the complete connection string for your PostgreSQL database. It's constructed from the individual `POSTGRES_*` variables.
-            *   The example in `.env.example` (`postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}`) is suitable for local development.
+        *   `DATABASE_URL`: This is the complete connection string for your PostgreSQL database, written as a literal string.
+            *   The example in `.env.example` (`postgresql://scheduling:scheduling_local_dev@localhost:5433/scheduling_dev`) uses public sample credentials for the bundled local development database. Replace this URL for a different database; keep private credentials in your ignored `.env` file.
             *   For production or serverless databases, you should add `?sslmode=require` to the end of the URL to enforce SSL connections. The `.env.example` file includes comments guiding this.
 
     *   **GitHub OAuth Credentials (Optional):**
@@ -120,19 +115,55 @@ uses `POSTGRES_URL`, then `DATABASE_URL`. Configure these to point at the same
 database, using an unpooled connection for migrations when needed. On deployment,
 supply these variables through the hosting environment; Docker Compose's
 `env_file` injects them at container runtime, not during the image build.
+Client generation does not require a database URL; Prisma database commands
+require one and fail when it is missing.
 
 ### Docker Container
 
-To run the application as a Docker container, you need to have Docker installed on your machine. Once Docker is installed, you can use the Docker Compose command:
+Use Docker with Compose v2.24 or newer. Copy `.env.example` to `.env` and set
+`AUTH_SECRET` and your GitHub OAuth credentials. The bundled database is dedicated
+to local development: `scheduling_dev`, with public sample credentials
+`scheduling` / `scheduling_local_dev`, matching the URL in `.env.example`.
+Compose configures these database settings internally; no separate `POSTGRES_*`
+entries are needed in `.env`.
 
-1. Build the Docker image:
-    ```sh
-    docker compose build
-    ```
-1. Run the Docker container:
-    ```sh 
-    docker compose up
-    ```
+```sh
+docker compose up --build -d
+```
+
+Compose waits for PostgreSQL to be healthy, runs the one-time `migrate` service,
+then starts the app at `http://localhost:3000`. The app and migration containers
+use `postgres_db:5432`; host-side database tools use `localhost:5433` by default.
+`APP_PORT` can change the app's host port. Ports bind to localhost.
+The database volume persists across `docker compose down`; changing database
+settings in Compose does not change credentials in an already initialized volume.
+
+The Node 24 image build generates Prisma's client and builds Next.js without
+database or authentication secrets. Environment files are excluded from the build
+context. The application image contains Next.js's standalone output and runs as
+the `node` user. `.env` and an optional `.env.local` are supplied at runtime.
+The deployment uses the built image without mounting host source or dependencies.
+
+For deployment with an existing PostgreSQL database, build and run the migration
+target once with your database environment, then start the application image:
+
+```sh
+docker build --target migrations -t scheduling-algorithms:migrations .
+docker build -t scheduling-algorithms:app .
+docker run --rm --env-file .env scheduling-algorithms:migrations
+docker run --rm -p 127.0.0.1:3000:3000 --env-file .env scheduling-algorithms:app
+```
+
+The database URL must be reachable from inside the containers. A host database's
+`localhost` URL refers to the container itself; on Docker Desktop, use
+`host.docker.internal` with the database's host port in a separate ignored runtime
+environment file. Set `AUTH_URL` to the browser-facing application origin.
+`docker run --env-file` does not expand `${VARIABLE}` references: use fully
+resolved database URLs in that runtime file.
+Compose supplies its bundled database URL and clears host-side URL aliases,
+so use the direct `docker run` approach for an existing or external
+database. The existing `npm run build` migration step remains available for
+non-container deployments.
 
 ## Future Improvements
 

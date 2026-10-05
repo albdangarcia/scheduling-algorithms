@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Docker needs a standalone server; local builds retain `npm run start`.
+  output: process.env.NEXT_OUTPUT === "standalone" ? "standalone" : undefined,
   images: {
     /**
      * Specifies patterns for remote images that are allowed to be optimized by Next.js.

@@ -1,8 +1,14 @@
 Dockerfile
 .dockerignore
+docker-compose*.yml
 node_modules
-npm-debug.log
-.env
+.next
+prisma/generated
+coverage
+*.tsbuildinfo
+npm-debug.log*
+.env*
 .git
 .gitignore
+.vercel
 README.md
