@@ -1,27 +1,56 @@
+x-database-environment: &database-environment
+  # Public sample credentials for the bundled local development database.
+  DATABASE_URL: "postgresql://scheduling:scheduling_local_dev@postgres_db:5432/scheduling_dev"
+  # Ignore host-side connection aliases when using the Compose database.
+  DATABASE_URL_UNPOOLED: ""
+  POSTGRES_URL_NON_POOLING: ""
+  POSTGRES_URL: ""
+
 services:
   nextjs:
     build:
       context: .
-      dockerfile: Dockerfile
+      target: runner
     ports:
-      - "3000:3000"
+      - "127.0.0.1:${APP_PORT:-3000}:3000"
     env_file:
-      - .env # Loads variables from .env into the service's environment
-    volumes:
-      - .:/usr/src/app # Mounts local code into the container for live reloading
-      - /usr/src/app/node_modules # Anonymous volume to prevent local node_modules from overwriting container's
-      - /usr/src/app/.next # Anonymous volume for Next.js build cache
+      - path: .env
+      - path: .env.local
+        required: false
+    environment:
+      <<: *database-environment
+      NODE_ENV: production
+      AUTH_URL: "${AUTH_URL:-http://localhost:${APP_PORT:-3000}}"
     depends_on:
-      - postgres_db # Ensures PostgreSQL starts before Next.js
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  migrate:
+    build:
+      context: .
+      target: migrations
+    environment: *database-environment
+    depends_on:
+      postgres_db:
+        condition: service_healthy
+    restart: "no"
 
   postgres_db:
     image: postgres:16-alpine
-    env_file:
-      - .env # Loads variables from .env into the service's environment
+    environment:
+      POSTGRES_USER: scheduling
+      POSTGRES_PASSWORD: scheduling_local_dev
+      POSTGRES_DB: scheduling_dev
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "127.0.0.1:5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data # Persist database data
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
-  postgres_data: # Named volume for data persistencesho
+  postgres_data:
